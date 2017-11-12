@@ -1,0 +1,43 @@
+<resources>
+    <string name="app_name">Ape Shop</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_sign_up">Sign Up</string>
+
+    <string name="home">Home</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="address">Address</string>
+    <string name="country">Country</string>
+    <string name="province_state">Province/State</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="back">Back</string>
+
+    <string-array name="countryArray">
+        <item>Select</item>
+        <item>Canada</item>
+        <item>USA</item>
+    </string-array>
+    <string-array name="provinceArray">
+        <item>Select</item>
+        <item>Alberta</item>
+        <item>British Columbia</item>
+        <item>Manitoba</item>
+        <item>New Brunswick</item>
+        <item>Newfoundland</item>
+        <item>Nova Scotia</item>
+        <item>Ontario</item>
+        <item>Prince Edward Island</item>
+        <item>Quebec</item>
+        <item>Saskatchewan</item>
+        <item>Territories</item>
+    </string-array>
+    <string name="title_activity_log_in">LogIn</string>
+    <string name="postal_zip_code">Postal / Zip Code</string>
+
+</resources>
