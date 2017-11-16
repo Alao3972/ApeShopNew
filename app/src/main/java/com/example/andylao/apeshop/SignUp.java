@@ -1,9 +1,8 @@
 package com.example.andylao.apeshop;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -28,7 +27,7 @@ public class SignUp extends AppCompatActivity
     EditText email;
     EditText password;
     EditText address;
-    EditText zipCode;
+    EditText postalCode;
     Button signUpButton;
 
     Spinner countrySpinner;
@@ -38,10 +37,17 @@ public class SignUp extends AppCompatActivity
     DrawerLayout drawer;
     NavigationView navigationView;
     Toolbar toolbar = null;
+
+    DatabaseHelper dbHelper;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+
+        dbHelper = new DatabaseHelper(this);
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -90,13 +96,16 @@ public class SignUp extends AppCompatActivity
             }
         });
 
+        // getting input values
         firstName = (EditText)findViewById(R.id.sign_up_first_name_txt);
         lastName = (EditText)findViewById(R.id.sign_up_last_name_txt);
         email = (EditText)findViewById(R.id.sign_up_email_txt);
         password = (EditText)findViewById(R.id.sign_up_password_txt);
         address = (EditText)findViewById(R.id.sign_up_address_txt);
-        zipCode = (EditText)findViewById(R.id.sign_up_code_txt);
+        postalCode = (EditText)findViewById(R.id.sign_up_code_txt);
 
+        //when sign up clicked
+        //validate inputs
         signUpButton = (Button)findViewById(R.id.sign_up_btn);
         signUpButton.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -106,7 +115,7 @@ public class SignUp extends AppCompatActivity
                 String newEmail = email.getText().toString();
                 String newPassword = password.getText().toString();
                 String newAddress = address.getText().toString();
-                String newZipCode = zipCode.getText().toString();
+                String newPostalCode = postalCode.getText().toString();
                 String newCountry = countrySpinner.getSelectedItem().toString();
                 String newProvince = provinceSpinner.getSelectedItem().toString();
 
@@ -130,9 +139,9 @@ public class SignUp extends AppCompatActivity
                     address.requestFocus();
                     address.setError("Address cannot be empty");
                 }
-                else if (newZipCode.length()==0){
-                    zipCode.requestFocus();
-                    zipCode.setError("Postal/Zip Code cannot be empty");
+                else if (newPostalCode.length()==0){
+                    postalCode.requestFocus();
+                    postalCode.setError("Postal/Zip Code cannot be empty");
                 }
                 else if (newCountry.matches("Select")){
                     countrySpinner.requestFocus();
@@ -143,13 +152,13 @@ public class SignUp extends AppCompatActivity
                     Toast.makeText(getBaseContext(),"Province Not Selected", Toast.LENGTH_LONG).show();
                 }
                 else{
-                    startActivity(new Intent(SignUp.this, MainActivity.class));
+                    // adds user to database after validation
+                    dbHelper.addUser(newFirstName, newLastName, newEmail, newPassword, newAddress, newPostalCode, newCountry, newProvince);
+                    startActivity(new Intent(SignUp.this, LogIn.class));
                     Toast.makeText(getBaseContext(), "Sign Up Successful!", Toast.LENGTH_LONG).show();
                 }
             }
         });
-
-
     }
 
     @Override
@@ -187,14 +196,13 @@ public class SignUp extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+
         int id=item.getItemId();
         switch (id) {
 
             case R.id.nav_home:
                 Intent h= new Intent(this,MainActivity.class);
                 startActivity(h);
-
                 break;
             case R.id.nav_sign_up:
                 Intent i= new Intent(this,SignUp.class);
@@ -220,6 +228,7 @@ public class SignUp extends AppCompatActivity
         startActivity(intent);
     }
 }
+// hide log in and sign up options after login sucessful
 
 //    @Override
 //    protected void onCreate(Bundle savedInstanceState) {

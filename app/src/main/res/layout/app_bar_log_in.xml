@@ -30,7 +30,7 @@
 
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/log_in_email_txt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -38,7 +38,7 @@
             android:inputType="textPersonName" />
 
         <EditText
-            android:id="@+id/editText2"
+            android:id="@+id/log_in_passowrd_txt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -49,6 +49,7 @@
             android:id="@+id/log_in_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:onClick="onLogInBtnClick"
             android:text="Log In" />
 
         <Button

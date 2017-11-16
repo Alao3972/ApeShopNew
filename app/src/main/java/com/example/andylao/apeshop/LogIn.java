@@ -2,8 +2,6 @@ package com.example.andylao.apeshop;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,14 +11,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.Toast;
 
 public class LogIn extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
+
+        dbHelper = new DatabaseHelper(this);
+        dbHelper = dbHelper.open();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -32,6 +38,26 @@ public class LogIn extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    public void onLogInBtnClick(View view){
+
+        EditText a = (EditText)findViewById(R.id.log_in_email_txt);
+        EditText b = (EditText)findViewById(R.id.log_in_passowrd_txt);
+
+        String email = a.getText().toString();
+        String password = b.getText().toString();
+
+        if (dbHelper.checkUser(email, password)){
+
+            Intent i = new Intent(this, MainActivity.class);
+
+            startActivity(i);
+            Toast.makeText(getBaseContext(), "Welcome " + email, Toast.LENGTH_LONG).show();
+        }
+        else{
+            Toast.makeText(this, "Incorrect email or password", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -69,7 +95,7 @@ public class LogIn extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+
         int id = item.getItemId();
 
         switch (id){
