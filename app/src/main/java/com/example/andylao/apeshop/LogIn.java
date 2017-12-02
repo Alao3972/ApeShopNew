@@ -1,7 +1,10 @@
 package com.example.andylao.apeshop;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,6 +21,8 @@ public class LogIn extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     DatabaseHelper dbHelper;
+    int userId;
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +31,8 @@ public class LogIn extends AppCompatActivity
 
         dbHelper = new DatabaseHelper(this);
         dbHelper = dbHelper.open();
+
+        user = new User();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -50,10 +57,19 @@ public class LogIn extends AppCompatActivity
 
         if (dbHelper.checkUser(email, password)){
 
-            Intent i = new Intent(this, MainActivity.class);
+            userId = dbHelper.getUserId(email);
 
-            startActivity(i);
-            Toast.makeText(getBaseContext(), "Welcome " + email, Toast.LENGTH_LONG).show();
+            SharedPreferences preferences = getSharedPreferences("loginInfo", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putInt("userId",userId);
+            editor.apply();
+
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("userId", userId);
+            intent.putExtra("email", email);
+
+            startActivity(intent);
+            Toast.makeText(getBaseContext(), "Welcome " + email + userId, Toast.LENGTH_LONG).show();
         }
         else{
             Toast.makeText(this, "Incorrect email or password", Toast.LENGTH_LONG).show();
@@ -112,6 +128,14 @@ public class LogIn extends AppCompatActivity
             case R.id.nav_log_in:
                 Intent g= new Intent(this,LogIn.class);
                 startActivity(g);
+                break;
+            case R.id.nav_post_ad:
+                Intent s= new Intent(this,PostAd.class);
+                startActivity(s);
+                break;
+            case R.id.nav_my_items:
+                Intent t= new Intent(this,MyItem.class);
+                startActivity(t);
                 break;
         }
 

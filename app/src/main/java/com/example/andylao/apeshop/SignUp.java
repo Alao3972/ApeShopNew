@@ -39,6 +39,7 @@ public class SignUp extends AppCompatActivity
     Toolbar toolbar = null;
 
     DatabaseHelper dbHelper;
+    private User user;
 
 
     @Override
@@ -47,6 +48,7 @@ public class SignUp extends AppCompatActivity
         setContentView(R.layout.activity_sign_up);
 
         dbHelper = new DatabaseHelper(this);
+        user = new User();
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -110,10 +112,10 @@ public class SignUp extends AppCompatActivity
         signUpButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                String newFirstName = firstName.getText().toString();
-                String newLastName = lastName.getText().toString();
-                String newEmail = email.getText().toString();
-                String newPassword = password.getText().toString();
+                String newFirstName = firstName.getText().toString().trim();
+                String newLastName = lastName.getText().toString().trim();
+                String newEmail = email.getText().toString().trim();
+                String newPassword = password.getText().toString().trim();
                 String newAddress = address.getText().toString();
                 String newPostalCode = postalCode.getText().toString();
                 String newCountry = countrySpinner.getSelectedItem().toString();
@@ -153,9 +155,19 @@ public class SignUp extends AppCompatActivity
                 }
                 else{
                     // adds user to database after validation
-                    dbHelper.addUser(newFirstName, newLastName, newEmail, newPassword, newAddress, newPostalCode, newCountry, newProvince);
+                    user.setFirstName(newFirstName);
+                    user.setLastName(newLastName);
+                    user.setEmail(newEmail);
+                    user.setPassword(newPassword);
+                    user.setAddress(newAddress);
+                    user.setPostalCode(newPostalCode);
+                    user.setCountry(newCountry);
+                    user.setProvince(newProvince);
+                    dbHelper.addUser(user);
+
                     startActivity(new Intent(SignUp.this, LogIn.class));
                     Toast.makeText(getBaseContext(), "Sign Up Successful!", Toast.LENGTH_LONG).show();
+
                 }
             }
         });
@@ -198,11 +210,12 @@ public class SignUp extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
 
         int id=item.getItemId();
-        switch (id) {
+        switch (id){
 
             case R.id.nav_home:
                 Intent h= new Intent(this,MainActivity.class);
                 startActivity(h);
+
                 break;
             case R.id.nav_sign_up:
                 Intent i= new Intent(this,SignUp.class);
@@ -211,6 +224,14 @@ public class SignUp extends AppCompatActivity
             case R.id.nav_log_in:
                 Intent g= new Intent(this,LogIn.class);
                 startActivity(g);
+                break;
+            case R.id.nav_post_ad:
+                Intent s= new Intent(this,PostAd.class);
+                startActivity(s);
+                break;
+            case R.id.nav_my_items:
+                Intent t= new Intent(this,MyItem.class);
+                startActivity(t);
                 break;
         }
 

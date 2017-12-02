@@ -26,6 +26,14 @@
         <activity
             android:name=".LogIn"
             android:label="@string/title_activity_log_in"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".PostAd"
+            android:label="@string/title_activity_post_ad"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MyItem"
+            android:label="@string/title_activity_my_item"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

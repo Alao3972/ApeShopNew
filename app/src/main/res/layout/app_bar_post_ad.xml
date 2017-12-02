@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background"
-    tools:context="com.example.andylao.apeshop.SignUp">
+    tools:context="com.example.andylao.apeshop.PostAd">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -28,108 +28,102 @@
         android:orientation="vertical">
 
         <EditText
-            android:id="@+id/sign_up_first_name_txt"
+            android:id="@+id/post_title_txt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="@color/colorPrimary"
-            android:textColor="@color/colorPrimary"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="5dp"
             android:ems="10"
-            android:hint="@string/first_name"
+            android:hint="@string/title"
             android:inputType="textPersonName" />
 
         <EditText
-            android:id="@+id/sign_up_last_name_txt"
+            android:id="@+id/post_description_txt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="@color/colorPrimary"
-            android:textColor="@color/colorPrimary"
-            android:layout_marginBottom="5dp"
             android:ems="10"
-            android:hint="@string/last_name"
+            android:hint="@string/description"
             android:inputType="textPersonName" />
 
-        <EditText
-            android:id="@+id/sign_up_email_txt"
+        <TextView
+            android:id="@+id/post_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="@color/colorPrimary"
             android:textColor="@color/colorPrimary"
-            android:layout_marginBottom="5dp"
+            android:text="@string/category" />
+
+        <Spinner
+            android:id="@+id/post_category_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/post_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Price"
+            android:inputType="number" />
+
+        <EditText
+            android:id="@+id/post_email_txt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/email"
             android:inputType="textEmailAddress" />
 
         <EditText
-            android:id="@+id/sign_up_password_txt"
+            android:id="@+id/post_address_txt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="@color/colorPrimary"
-            android:textColor="@color/colorPrimary"
-            android:layout_marginBottom="5dp"
-            android:ems="10"
-            android:hint="@string/password"
-            android:inputType="textPassword" />
-
-        <EditText
-            android:id="@+id/sign_up_address_txt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColorHint="@color/colorPrimary"
-            android:textColor="@color/colorPrimary"
-            android:layout_marginBottom="5dp"
             android:ems="10"
             android:hint="@string/address"
             android:inputType="textPersonName" />
 
         <EditText
-            android:id="@+id/sign_up_code_txt"
+            android:id="@+id/post_postalCode_txt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="@color/colorPrimary"
-            android:textColor="@color/colorPrimary"
-            android:layout_marginBottom="5dp"
             android:ems="10"
             android:hint="@string/postal_zip_code"
             android:inputType="textPersonName" />
 
         <TextView
-            android:id="@+id/sign_up_country"
+            android:id="@+id/post_country"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/colorPrimary"
             android:text="@string/country" />
 
         <Spinner
-            android:id="@+id/sign_up_country_spinner"
+            android:id="@+id/post_country_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
         <TextView
-            android:id="@+id/sign_up_province"
+            android:id="@+id/post_province"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/colorPrimary"
             android:text="@string/province_state" />
 
         <Spinner
-            android:id="@+id/sign_up_province_spinner"
+            android:id="@+id/post_province_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
         <Button
-            android:id="@+id/sign_up_btn"
+            android:id="@+id/post_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:textColor="@color/colorPrimary"
             android:background="@drawable/button_background"
-            android:text="@string/sign_up" />
+            android:text="@string/post_ad" />
 
         <Button
-            android:id="@+id/sign_up_back_btn"
+            android:id="@+id/post_back_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/colorPrimary"
@@ -138,5 +132,7 @@
             android:text="@string/back"/>
 
     </LinearLayout>
+
+
 
 </android.support.design.widget.CoordinatorLayout>

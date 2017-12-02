@@ -37,7 +37,38 @@
         <item>Saskatchewan</item>
         <item>Territories</item>
     </string-array>
+    <string-array name="categoriesArray">
+        <item>Select</item>
+        <item>Art/Collectable</item>
+        <item>Audio</item>
+        <item>Baby Items</item>
+        <item>Bike</item>
+        <item>Book</item>
+        <item>Bussiness</item>
+        <item>Camera</item>
+        <item>CD/DVD</item>
+        <item>Clothing</item>
+        <item>Computer</item>
+        <item>Computer Accessories</item>
+        <item>Ectronicsle</item>
+        <item>Furniture</item>
+        <item>Jewellery</item>
+        <item>Phone</item>
+        <item>Sport</item>
+        <item>Tool</item>
+        <item>Toy</item>
+        <item>Tv</item>
+        <item>Video Games</item>
+        <item>Other</item>
+    </string-array>
     <string name="title_activity_log_in">LogIn</string>
     <string name="postal_zip_code">Postal / Zip Code</string>
+    <string name="title_activity_post_ad">PostAd</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="category">Category</string>
+    <string name="post_ad">Post AD</string>
+    <string name="title_activity_my_item">MyItem</string>
+    <string name="guest">Guest</string>
 
 </resources>

@@ -14,7 +14,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String
-            dbName = "apeshopered.db",
+            dbName = "apeshoperedse.db",
             tableName = "users",
             colId = "id",
             colFName = "firstName",
@@ -24,7 +24,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             colAddress = "address",
             colPostalCode = "postalCode",
             colCountry = "country",
-            colProvince = "province";
+            colProvince = "province",
+            colItemId = "itemId",
+            colTitle = "title",
+            colDescription = "description",
+            colCategory = "category",
+            colPrice = "price",
+            itemTable = "items",
+            colPhone = "phone",
+            employeeTable = "employee",
+            colEmployeeId = "employeeId",
+            colEmployeeFirstName = "employeeName",
+            colEmployeeLastName = "employeeId";
+
 
     public SQLiteDatabase db;
 
@@ -44,6 +56,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 colPostalCode + " TEXT," +
                 colCountry + " TEXT," +
                 colProvince + " TEXT)");
+
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + itemTable + "( " +
+                colItemId + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                colId + " INTEGER," +
+                colTitle + " TEXT," +
+                colDescription + " TEXT," +
+                colCategory + " TEXT," +
+                colPrice + " TEXT," +
+                colEmail + " TEXT," +
+                colAddress + " TEXT," +
+                colCountry + " TEXT," +
+                colProvince + " TEXT)");
+
+        db.execSQL("CREATE TABLE IF NOT EXISTS " + employeeTable + "(" +
+                colEmployeeId + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                colEmployeeFirstName + " INTEGER," +
+                colEmployeeLastName + " TEXT)");
     }
 
     @Override
@@ -52,35 +81,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void addUser(String firstName, String lastName, String email, String password, String address, String postalCode, String country, String province) {
+    public void addUser(User user) {
 
         db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
-        contentValues.put(colFName, firstName);
-        contentValues.put(colLName, lastName);
-        contentValues.put(colEmail, email);
-        contentValues.put(colPass, password);
-        contentValues.put(colAddress, address);
-        contentValues.put(colPostalCode, postalCode);
-        contentValues.put(colCountry, country);
-        contentValues.put(colProvince, province);
+        contentValues.put(colFName, user.getFirstName());
+        contentValues.put(colLName, user.getLastName());
+        contentValues.put(colEmail, user.getEmail());
+        contentValues.put(colPass, user.getPassword());
+        contentValues.put(colAddress, user.getAddress());
+        contentValues.put(colPostalCode, user.getPostalCode());
+        contentValues.put(colCountry, user.getCountry());
+        contentValues.put(colProvince, user.getProvince());
 
         db.insert(tableName, null, contentValues);
 
         db.close();
     }
 
-    public boolean checkUser(String email, String password) {
-
+    public int getUserId(String email){
+        int id = -1;
         String[] columns = {
                 colId
         };
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String selection = colEmail + " = ?" + " AND " + colPass + " = ?";
+        String selection = colEmail + " = ?";
 
-        String[] selectionArgs = {email, password};
+        String[] selectionArgs = {email};
 
         Cursor cursor = db.query(tableName,
                 columns,
@@ -91,13 +120,82 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 null);
 
         int cursorCount = cursor.getCount();
+        if (cursor.moveToFirst()) {
+            id = cursor.getInt(cursor.getColumnIndex(colId));;
+        }
+        cursor.close();
+        db.close();
+        return id;
+    }
 
+    public void addItem(Item item) {
+
+        db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(colId, item.getId());
+        contentValues.put(colTitle, item.getTitle());
+        contentValues.put(colDescription, item.getDescription());
+        contentValues.put(colCategory, item.getCategory());
+        contentValues.put(colPrice, item.getPrice());
+        contentValues.put(colEmail, item.getEmail());
+        contentValues.put(colAddress, item.getAddress());
+        contentValues.put(colPostalCode, item.getPostalCode());
+        contentValues.put(colCountry, item.getCountry());
+        contentValues.put(colProvince, item.getProvince());
+
+
+        db.insert(itemTable, null, contentValues);
+
+        db.close();
+    }
+
+    public Cursor getItemID(int userId){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT " + colTitle + " FROM " + itemTable +
+                " WHERE " + colId + " = '" + userId + "'";
+        Cursor data = db.rawQuery(query, null);
+        return data;
+    }
+
+    public Cursor getData(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM " + itemTable;
+        Cursor data = db.rawQuery(query, null);
+        return data;
+    }
+
+    public Cursor queueAll(){
+        String[] columns = new String[]{colItemId, colId, colTitle, colDescription, colCategory, colPrice, colEmail, colAddress, colCountry, colProvince};
+        Cursor cursor = db.query(itemTable, columns,
+                null, null, null, null, null);
+
+        return cursor;
+    }
+
+
+    public boolean checkUser(String email, String password) {
+
+        String[] columns = {
+                colId
+        };
+        SQLiteDatabase db = this.getReadableDatabase();
+        String selection = colEmail + " = ?" + " AND " + colPass + " = ?";
+        String[] selectionArgs = {email, password};
+        Cursor cursor = db.query(tableName,
+                columns,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null);
+        int cursorCount = cursor.getCount();
         cursor.close();
         db.close();
         if (cursorCount > 0) {
             return true;
         }
-
         return false;
     }
 
