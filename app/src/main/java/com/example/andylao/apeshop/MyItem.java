@@ -48,12 +48,27 @@ public class MyItem extends AppCompatActivity
         listContent = (ListView)findViewById(R.id.myItemsListView);
         dbHelper = new DatabaseHelper(this);
 
+        ArrayList<String> itemList = new ArrayList<>();
+        Cursor itemCursor = dbHelper.getItemList();
+
+        if (itemCursor.getCount() == 0){
+            Toast.makeText(getBaseContext(), "No Ads Posted" , Toast.LENGTH_LONG).show();
+        }
+        else{
+            while(itemCursor.moveToNext()){
+                itemList.add(itemCursor.getString(2));
+
+                ListAdapter listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, itemList);
+                listContent.setAdapter(listAdapter);
+            }
+        }
+
 
 
 
         userLogin();
         if (userId ==7){
-            populateMyItems();
+            //populateMyItems();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -68,17 +83,8 @@ public class MyItem extends AppCompatActivity
     }
 
     private void populateMyItems() {
-        dbHelper.getReadableDatabase();
-        Cursor cursor =  dbHelper.queueAll();
-        startManagingCursor(cursor);
-        String[] from = new String[]{DatabaseHelper.colTitle};
-        int[] to = new int[]{R.id.text};
-        SimpleCursorAdapter cursorAdapter =
-                new SimpleCursorAdapter(this, R.layout.my_items_row, cursor, from, to);
 
-        listContent.setAdapter(cursorAdapter);
 
-        dbHelper.close();
 
     }
 
@@ -88,10 +94,6 @@ public class MyItem extends AppCompatActivity
         userId = preferences.getInt("userId", 0);
 
         Toast.makeText(getBaseContext(), Integer.toString(userId) , Toast.LENGTH_LONG).show();
-
-//        if (userId !=  0){
-//            Toast.makeText(getBaseContext(), "yes" , Toast.LENGTH_LONG).show();
-//        }
 
 
 

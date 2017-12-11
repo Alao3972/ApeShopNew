@@ -65,8 +65,8 @@ public class LogIn extends AppCompatActivity
             editor.apply();
 
             Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra("userId", userId);
-            intent.putExtra("email", email);
+//            intent.putExtra("userId", userId);
+//            intent.putExtra("email", email);
 
             startActivity(intent);
             Toast.makeText(getBaseContext(), "Welcome " + email + userId, Toast.LENGTH_LONG).show();

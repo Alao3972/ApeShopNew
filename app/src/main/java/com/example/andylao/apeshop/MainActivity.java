@@ -25,7 +25,6 @@ public class MainActivity extends AppCompatActivity
     NavigationView navigationView;
     Toolbar toolbar = null;
     int userId;
-    String email;
     TextView navName;
 
     User user;
@@ -61,7 +60,7 @@ public class MainActivity extends AppCompatActivity
         //email = intent.getStringExtra("email");
         if (userId != 0){
 
-            Toast.makeText(getBaseContext(), userId + " this" + email, Toast.LENGTH_LONG).show();
+            Toast.makeText(getBaseContext(), userId , Toast.LENGTH_LONG).show();
         }
 
     }

@@ -14,7 +14,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String
-            dbName = "apeshoperedse.db",
+            dbName = "apeshoperedsess.db",
             tableName = "users",
             colId = "id",
             colFName = "firstName",
@@ -34,8 +34,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             colPhone = "phone",
             employeeTable = "employee",
             colEmployeeId = "employeeId",
-            colEmployeeFirstName = "employeeName",
-            colEmployeeLastName = "employeeId";
+            colEmployeeFirstName = "employeeFirstName",
+            colEmployeeLastName = "employeeLastName";
 
 
     public SQLiteDatabase db;
@@ -66,6 +66,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 colPrice + " TEXT," +
                 colEmail + " TEXT," +
                 colAddress + " TEXT," +
+                colPostalCode + " TEXT," +
                 colCountry + " TEXT," +
                 colProvince + " TEXT)");
 
@@ -159,7 +160,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return data;
     }
 
-    public Cursor getData(){
+    public Cursor getItemList(){
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT * FROM " + itemTable;
         Cursor data = db.rawQuery(query, null);

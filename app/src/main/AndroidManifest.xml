@@ -30,7 +30,8 @@
         <activity
             android:name=".PostAd"
             android:label="@string/title_activity_post_ad"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            />
         <activity
             android:name=".MyItem"
             android:label="@string/title_activity_my_item"
