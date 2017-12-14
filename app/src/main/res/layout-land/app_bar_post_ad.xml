@@ -29,9 +29,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <EditText
@@ -40,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="@string/title"
-                android:layout_weight="0.5"
+                android:layout_weight="1"
                 android:inputType="textPersonName" />
 
             <EditText
@@ -49,23 +47,8 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="@string/description"
-                android:layout_weight="0.5"
+                android:layout_weight="1"
                 android:inputType="textPersonName" />
-
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/post_category"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimary"
-                android:layout_weight="0.5"
-                android:text="@string/category" />
 
             <EditText
                 android:id="@+id/post_price"
@@ -73,22 +56,14 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="Price"
-                android:layout_weight="0.5"
+                android:layout_weight="1"
                 android:inputType="number" />
 
         </LinearLayout>
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
-
-            <Spinner
-                android:id="@+id/post_category_spinner"
-                android:layout_width="match_parent"
-                android:layout_weight="0.5"
-                android:layout_height="wrap_content"/>
 
             <EditText
                 android:id="@+id/post_email_txt"
@@ -96,16 +71,8 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="@string/email"
-                android:layout_weight="0.5"
+                android:layout_weight="1"
                 android:inputType="textEmailAddress" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/post_address_txt"
@@ -113,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="@string/address"
-                android:layout_weight="0.5"
+                android:layout_weight="1"
                 android:inputType="textPersonName" />
 
             <EditText
@@ -122,23 +89,33 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="@string/postal_zip_code"
-                android:layout_weight="0.5"
+                android:layout_weight="1"
                 android:inputType="textPersonName" />
+
+
 
         </LinearLayout>
 
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/post_category"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimary"
+                android:layout_weight="1"
+                android:text="@string/category" />
 
             <TextView
                 android:id="@+id/post_country"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPrimary"
-                android:layout_weight="0.5"
+                android:layout_weight="1"
                 android:text="@string/country" />
 
             <TextView
@@ -146,35 +123,40 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorPrimary"
-                android:layout_weight="0.5"
+                android:layout_weight="1"
                 android:text="@string/province_state" />
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/post_category_spinner"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"/>
 
             <Spinner
                 android:id="@+id/post_country_spinner"
                 android:layout_width="match_parent"
-                android:layout_weight="0.5"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"/>
 
 
             <Spinner
                 android:id="@+id/post_province_spinner"
                 android:layout_width="match_parent"
-                android:layout_weight="0.5"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"/>
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="horizontal">
 
@@ -182,14 +164,14 @@
                 android:id="@+id/post_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.5"
+                android:layout_weight="1"
                 app:srcCompat="@android:drawable/btn_star" />
 
             <Button
                 android:id="@+id/post_choose_image_btn"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.5"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:text="Choose Image" />
 
 
@@ -198,8 +180,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <Button
