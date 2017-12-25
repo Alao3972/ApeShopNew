@@ -24,15 +24,20 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="55dp"
-        android:orientation="vertical">
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:orientation="vertical"
+        android:background="@color/colorPrimary"
+        android:alpha="0.8"
+        android:layout_gravity="center_vertical">
 
         <EditText
             android:id="@+id/sign_up_first_name_txt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="@color/colorPrimary"
-            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/textColor"
+            android:textColor="@color/textColor"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:ems="10"
@@ -43,8 +48,8 @@
             android:id="@+id/sign_up_last_name_txt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="@color/colorPrimary"
-            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/textColor"
+            android:textColor="@color/textColor"
             android:layout_marginBottom="5dp"
             android:ems="10"
             android:hint="@string/last_name"
@@ -54,8 +59,8 @@
             android:id="@+id/sign_up_email_txt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="@color/colorPrimary"
-            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/textColor"
+            android:textColor="@color/textColor"
             android:layout_marginBottom="5dp"
             android:ems="10"
             android:hint="@string/email"
@@ -65,8 +70,8 @@
             android:id="@+id/sign_up_password_txt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="@color/colorPrimary"
-            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/textColor"
+            android:textColor="@color/textColor"
             android:layout_marginBottom="5dp"
             android:ems="10"
             android:hint="@string/password"
@@ -76,8 +81,8 @@
             android:id="@+id/sign_up_address_txt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="@color/colorPrimary"
-            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/textColor"
+            android:textColor="@color/textColor"
             android:layout_marginBottom="5dp"
             android:ems="10"
             android:hint="@string/address"
@@ -87,8 +92,8 @@
             android:id="@+id/sign_up_code_txt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="@color/colorPrimary"
-            android:textColor="@color/colorPrimary"
+            android:textColorHint="@color/textColor"
+            android:textColor="@color/textColor"
             android:layout_marginBottom="5dp"
             android:ems="10"
             android:hint="@string/postal_zip_code"
@@ -98,25 +103,29 @@
             android:id="@+id/sign_up_country"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/textColor"
             android:text="@string/country" />
 
         <Spinner
             android:id="@+id/sign_up_country_spinner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:background="@color/textColor"
+            android:alpha="0.8"/>
 
         <TextView
             android:id="@+id/sign_up_province"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/textColor"
             android:text="@string/province_state" />
 
         <Spinner
             android:id="@+id/sign_up_province_spinner"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:background="@color/textColor"
+            android:alpha="0.8"/>
 
         <Button
             android:id="@+id/sign_up_btn"

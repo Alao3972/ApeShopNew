@@ -51,17 +51,17 @@ public class MyItem extends AppCompatActivity
         ArrayList<String> itemList = new ArrayList<>();
         Cursor itemCursor = dbHelper.getItemList();
 
-        if (itemCursor.getCount() == 0){
-            Toast.makeText(getBaseContext(), "No Ads Posted" , Toast.LENGTH_LONG).show();
-        }
-        else{
-            while(itemCursor.moveToNext()){
-                itemList.add(itemCursor.getString(2));
-
-                ListAdapter listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, itemList);
-                listContent.setAdapter(listAdapter);
-            }
-        }
+//        if (itemCursor.getCount() == 0){
+//            Toast.makeText(getBaseContext(), "No Ads Posted" , Toast.LENGTH_LONG).show();
+//        }
+//        else{
+//            while(itemCursor.moveToNext()){
+//                itemList.add(itemCursor.getString(2));
+//
+//                ListAdapter listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, itemList);
+//                listContent.setAdapter(listAdapter);
+//            }
+//        }
 
 
 

@@ -13,6 +13,11 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <color name="transparent_green">#8800ff00</color>
+    <style name="translucant_background" parent="android:Theme.Translucent">
+        <item name="android:background">@color/transparent_green</item>
+    </style>
+    
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

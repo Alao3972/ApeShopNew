@@ -14,7 +14,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String
-            dbName = "apeshoperedsess.db",
+            dbName = "apeshoperedsesst.db",
             tableName = "users",
             colId = "id",
             colFName = "firstName",
@@ -35,7 +35,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             employeeTable = "employee",
             colEmployeeId = "employeeId",
             colEmployeeFirstName = "employeeFirstName",
-            colEmployeeLastName = "employeeLastName";
+            colEmployeeLastName = "employeeLastName",
+            colImage = "itemImage";
 
 
     public SQLiteDatabase db;
@@ -68,7 +69,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 colAddress + " TEXT," +
                 colPostalCode + " TEXT," +
                 colCountry + " TEXT," +
-                colProvince + " TEXT)");
+                colProvince + " TEXT," +
+                colImage + " BLOB)");
 
         db.execSQL("CREATE TABLE IF NOT EXISTS " + employeeTable + "(" +
                 colEmployeeId + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -144,6 +146,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(colPostalCode, item.getPostalCode());
         contentValues.put(colCountry, item.getCountry());
         contentValues.put(colProvince, item.getProvince());
+        contentValues.put(colImage, item.getImage());
 
 
         db.insert(itemTable, null, contentValues);

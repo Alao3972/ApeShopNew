@@ -1,5 +1,7 @@
 package com.example.andylao.apeshop;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by Andy Lao on 2017-11-19.
  */
@@ -16,6 +18,7 @@ public class Item {
     private String postalCode;
     private String country;
     private String province;
+    private byte[] image;
 
     public int getId() {
         return id;
@@ -95,5 +98,13 @@ public class Item {
 
     public void setProvince(String province) {
         this.province = province;
+    }
+
+    public byte[] getImage(){
+        return this.image;
+    }
+
+    public void setImage(byte[] img){
+        this.image=img;
     }
 }
