@@ -1,9 +1,11 @@
 package com.example.andylao.apeshop;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -27,66 +29,115 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+
 public class MyItem extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String TAG = "ListDataActivity";
+    //private static final String TAG = "ListDataActivity";
 
     DatabaseHelper dbHelper;
 
-    private ListView mListView;
     int userId;
+    int itemId;
     ListView listContent;
+    public Cursor itemCursor;
+    public ArrayList<String> itemList;
+    public ArrayList<String> itemIdList;
+    String title, description, category, email, address, postalCode, country, province;
+    int price;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_item);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        listContent = (ListView)findViewById(R.id.myItemsListView);
         dbHelper = new DatabaseHelper(this);
 
-        ArrayList<String> itemList = new ArrayList<>();
-        Cursor itemCursor = dbHelper.getItemList();
-
-//        if (itemCursor.getCount() == 0){
-//            Toast.makeText(getBaseContext(), "No Ads Posted" , Toast.LENGTH_LONG).show();
-//        }
-//        else{
-//            while(itemCursor.moveToNext()){
-//                itemList.add(itemCursor.getString(2));
-//
-//                ListAdapter listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, itemList);
-//                listContent.setAdapter(listAdapter);
-//            }
-//        }
-
-
-
-
         userLogin();
-        if (userId ==7){
-            //populateMyItems();
-        }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        listContent = findViewById(R.id.myItemsListView);
+        listContent.setBackgroundColor(Color.WHITE);
+
+        itemList = new ArrayList<>();
+        itemIdList = new ArrayList<>();
+        itemCursor = dbHelper.getItemList(userId);
+
+        populateMyItems();
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
     }
 
     private void populateMyItems() {
 
+        if (itemCursor.getCount() == 0){
+            Toast.makeText(getBaseContext(), "No Ads Posted" , Toast.LENGTH_LONG).show();
+        }
+        else{
+            while(itemCursor.moveToNext()){
+                itemList.add(itemCursor.getString(2));
+                itemIdList.add(itemCursor.getString(0));
+                title = itemCursor.getString(2);
+                description = itemCursor.getString(3);
+                category = itemCursor.getString(4);
+                price = Integer.parseInt(itemCursor.getString(5));
+                email = itemCursor.getString(6);
+                address = itemCursor.getString(7);
+                postalCode = itemCursor.getString(8);
+                country = itemCursor.getString(9);
+                province = itemCursor.getString(10);
 
+                ListAdapter listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, itemList);
+                listContent.setAdapter(listAdapter);
 
+                listContent.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                        Intent intent = new Intent(MyItem.this, EditItem.class);
+                        itemId = Integer.parseInt(itemIdList.get(position));
+                        Toast.makeText(getBaseContext(), title, Toast.LENGTH_LONG).show();
+
+                        intent.putExtra("itemId", itemId);
+                        intent.putExtra("title", title);
+                        intent.putExtra("description", description);
+                        intent.putExtra("category", category);
+                        intent.putExtra("price", price);
+                        intent.putExtra("email", email);
+                        intent.putExtra("address", address);
+                        intent.putExtra("postalCode", postalCode);
+                        intent.putExtra("country", country);
+                        intent.putExtra("province", province);
+
+                        startActivity(intent);
+
+                    }
+                });
+
+            }
+        }
     }
+
+//     lv.setOnItemClickListener(new OnItemClickListener() {
+//        @Override
+//        public void onItemClick(AdapterView<?> parent, View view, int position,
+//        long id) {
+//            Intent intent = new Intent(MainActivity.this, SendMessage.class);
+//            String message = "abc";
+//            intent.putExtra(EXTRA_MESSAGE, message);
+//            startActivity(intent);
+//        }
+//    });
 
     public void userLogin(){
 
@@ -95,13 +146,12 @@ public class MyItem extends AppCompatActivity
 
         Toast.makeText(getBaseContext(), Integer.toString(userId) , Toast.LENGTH_LONG).show();
 
-
-
     }
+
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -162,7 +212,7 @@ public class MyItem extends AppCompatActivity
                 break;
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

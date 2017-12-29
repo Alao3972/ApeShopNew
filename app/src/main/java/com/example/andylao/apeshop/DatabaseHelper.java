@@ -7,6 +7,9 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /*
  * Created by Andy Lao on 2017-11-11.
  */
@@ -14,7 +17,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String
-            dbName = "apeshoperedsesst.db",
+            dbName = "apeshoperedsessft.db",
             tableName = "users",
             colId = "id",
             colFName = "firstName",
@@ -69,8 +72,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 colAddress + " TEXT," +
                 colPostalCode + " TEXT," +
                 colCountry + " TEXT," +
-                colProvince + " TEXT," +
-                colImage + " BLOB)");
+                colProvince + " TEXT)");
 
         db.execSQL("CREATE TABLE IF NOT EXISTS " + employeeTable + "(" +
                 colEmployeeId + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -146,7 +148,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(colPostalCode, item.getPostalCode());
         contentValues.put(colCountry, item.getCountry());
         contentValues.put(colProvince, item.getProvince());
-        contentValues.put(colImage, item.getImage());
 
 
         db.insert(itemTable, null, contentValues);
@@ -154,28 +155,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public Cursor getItemID(int userId){
-
+    public boolean updateItem(String id,String title,String description,String category, int price, String email, String address, String postalCode, String country, String province) {
         SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT " + colTitle + " FROM " + itemTable +
-                " WHERE " + colId + " = '" + userId + "'";
-        Cursor data = db.rawQuery(query, null);
-        return data;
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(colTitle, title);
+        contentValues.put(colDescription, description);
+        contentValues.put(colCategory, category);
+        contentValues.put(colPrice, price);
+        contentValues.put(colEmail, email);
+        contentValues.put(colAddress, address);
+        contentValues.put(colPostalCode, postalCode);
+        contentValues.put(colCountry, country);
+        contentValues.put(colProvince, province);
+        db.update(itemTable, contentValues, "itemId = ?",new String[] { id });
+        return true;
     }
 
-    public Cursor getItemList(){
+    public Cursor getItemList(int userId){
+
         SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM " + itemTable +
+                " WHERE " + colId + " = '" + userId + "'";
+        Cursor itemId = db.rawQuery(query, null);
+        return itemId;
+    }
+
+    public Cursor getItem(int itemId){
+        db = this.getWritableDatabase();
         String query = "SELECT * FROM " + itemTable;
         Cursor data = db.rawQuery(query, null);
         return data;
-    }
-
-    public Cursor queueAll(){
-        String[] columns = new String[]{colItemId, colId, colTitle, colDescription, colCategory, colPrice, colEmail, colAddress, colCountry, colProvince};
-        Cursor cursor = db.query(itemTable, columns,
-                null, null, null, null, null);
-
-        return cursor;
     }
 
 
@@ -208,8 +218,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db = this.getWritableDatabase();
         return this;
     }
-
-
 }
 
 

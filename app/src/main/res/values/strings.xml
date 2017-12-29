@@ -68,7 +68,10 @@
     <string name="description">Description</string>
     <string name="category">Category</string>
     <string name="post_ad">Post AD</string>
-    <string name="title_activity_my_item">MyItem</string>
+    <string name="title_activity_my_item">My Items</string>
     <string name="guest">Guest</string>
+    <string name="title_activity_edit_item">EditItem</string>
+    <string name="update_ad">Update</string>
+    <string name="delete_ad">Delete</string>
 
 </resources>

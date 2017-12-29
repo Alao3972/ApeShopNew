@@ -31,7 +31,11 @@
         <ListView
             android:id="@+id/myItemsListView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="50dp"
+            android:layout_marginLeft="50dp"
+            android:alpha="0.8"/>
 
     </LinearLayout>
 
