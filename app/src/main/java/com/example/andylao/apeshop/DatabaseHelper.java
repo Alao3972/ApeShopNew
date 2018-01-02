@@ -172,20 +172,52 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    public boolean deleteItem (String id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(itemTable, "itemId = ?",new String[] {id});
+        return true;
+    }
+
     public Cursor getItemList(int userId){
 
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT * FROM " + itemTable +
                 " WHERE " + colId + " = '" + userId + "'";
-        Cursor itemId = db.rawQuery(query, null);
+        Cursor itemId = db.rawQuery(query,null);
         return itemId;
     }
 
-    public Cursor getItem(int itemId){
+    public Cursor searchItemList(String searchWord){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM " + itemTable +
+                " WHERE " + colTitle + " LIKE ?";
+        Cursor itemId = db.rawQuery(query,  new String[]{"%" + searchWord + "%"});
+        return itemId;
+    }
+
+    public Cursor getItem(){
         db = this.getWritableDatabase();
         String query = "SELECT * FROM " + itemTable;
         Cursor data = db.rawQuery(query, null);
         return data;
+    }
+    public Cursor getSingleItem(int itemId){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM " + itemTable +
+                " WHERE " + colItemId + " = '" + itemId + "'";
+        Cursor singleItem = db.rawQuery(query,null);
+        return singleItem;
+    }
+
+    public Cursor browseItem(String category){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM " + itemTable +
+                " WHERE " + colCategory + " = '" + category + "'";
+        Cursor itemId = db.rawQuery(query,null);
+        return itemId;
     }
 
 

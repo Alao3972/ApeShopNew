@@ -1,10 +1,10 @@
 package com.example.andylao.apeshop;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,28 +14,36 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
-public class LogIn extends AppCompatActivity
+public class ViewItem extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    DatabaseHelper dbHelper;
-    int userId;
-    User user;
+    TextView txtTitle;
+    TextView txtDescription;
+    TextView txtPrice;
+    TextView txtEmail;
+    TextView txtAddress;
+    TextView txtPostalCode;
+    TextView txtProvince;
+    Button mapBtn;
+    Button emailBtn;
+
+
+    String title, description, category, email, address, postalCode, country, province;
+    int price;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_log_in);
-
-        dbHelper = new DatabaseHelper(this);
-        dbHelper = dbHelper.open();
-
-        user = new User();
-
+        setContentView(R.layout.activity_view_item);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -45,37 +53,68 @@ public class LogIn extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        mapBtn = (Button) findViewById(R.id.viewMapBtn);
+        emailBtn = (Button) findViewById(R.id.viewContactBtn);
+
+        mapBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse("geo: 43.3903, -80.4032"));
+                startActivity(intent);
+            }
+        });
+
+        emailBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Uri uri = Uri.parse("mailto:" + email)
+                        .buildUpon()
+                        .appendQueryParameter("subject", title)
+                        .build();
+
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, uri);
+                startActivity(Intent.createChooser(emailIntent, title));
+            }
+        });
+
+
+    populateItem();
+
     }
+    private void populateItem() {
+        Intent itemIntent = getIntent();
+        //itemId = itemIntent.getIntExtra("itemId", 0);
+        title = itemIntent.getExtras().getString("title", " ");
+        description = itemIntent.getExtras().getString("description", " ");
+        category = itemIntent.getExtras().getString("category", " ");
+        price = itemIntent.getIntExtra("price", 0);
+        email = itemIntent.getExtras().getString("email", " ");
+        address = itemIntent.getExtras().getString("address", " ");
+        postalCode = itemIntent.getExtras().getString("postalCode", " ");
+        country = itemIntent.getExtras().getString("country", " ");
+        province = itemIntent.getExtras().getString("province", " ");
 
-    public void onLogInBtnClick(View view){
+        txtTitle = findViewById(R.id.titleView);
+        txtDescription = findViewById(R.id.descriptionView);
+        txtPrice = findViewById(R.id.priceView);
+        txtEmail = findViewById(R.id.emailView);
+        //txtAddress = (EditText) findViewById(R.id.edit_address_txt);
+        //txtPostalCode = (TextView) findViewById(R.id.edit_postalCode_txt);
+        txtProvince = findViewById(R.id.provinceView);
 
-        EditText a = (EditText)findViewById(R.id.log_in_email_txt);
-        EditText b = (EditText)findViewById(R.id.log_in_passowrd_txt);
 
-        String email = a.getText().toString();
-        String password = b.getText().toString();
+        txtTitle.setText(title);
+        txtDescription.setText(description);
+        txtPrice.setText(""+price);
+        txtEmail.setText(email);
+        txtProvince.setText(province);
 
-        if (dbHelper.checkUser(email, password)){
+        Toast.makeText(this, title+121, Toast.LENGTH_LONG).show();
 
-            userId = dbHelper.getUserId(email);
 
-            SharedPreferences preferences = getSharedPreferences("loginInfo", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putInt("userId",userId);
-            editor.apply();
-
-            Intent intent = new Intent(this, MainActivity.class);
-//            intent.putExtra("userId", userId);
-//            intent.putExtra("email", email);
-
-            startActivity(intent);
-            Toast.makeText(getBaseContext(), "Welcome " + email, Toast.LENGTH_LONG).show();
-
-            startService(new Intent(getBaseContext(), BackgroundService.class));
-        }
-        else{
-            Toast.makeText(this, "Incorrect email or password", Toast.LENGTH_LONG).show();
-        }
     }
 
     @Override
@@ -91,7 +130,7 @@ public class LogIn extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.activity_main_drawer, menu);
+        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
@@ -113,7 +152,7 @@ public class LogIn extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-
+        // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         switch (id){
@@ -139,26 +178,10 @@ public class LogIn extends AppCompatActivity
                 Intent t= new Intent(this,MyItem.class);
                 startActivity(t);
                 break;
-            case R.id.nav_log_out:
-                Intent l= new Intent(this,MainActivity.class);
-                stopService(new Intent(getBaseContext(), BackgroundService.class));
-                startActivity(l);
-                break;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-
-
-    /**
-     * Back Button to home page
-     * @param view
-     */
-    public void showHome(View view){
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
     }
 }

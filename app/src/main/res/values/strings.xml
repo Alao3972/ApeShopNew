@@ -73,5 +73,16 @@
     <string name="title_activity_edit_item">EditItem</string>
     <string name="update_ad">Update</string>
     <string name="delete_ad">Delete</string>
+    <string name="title_activity_search_ad">searchAd</string>
+    <string name="title_activity_view_item">ViewItem</string>
+    <string name="titleView">Title:</string>
+    <string name="descriptionView">Description:</string>
+    <string name="emailView">Email:</string>
+    <string name="priceView">Price:</string>
+    <string name="map">Map</string>
+    <string name="contact">Contact</string>
+    <string name="log_in">Log In</string>
+    <string name="my_items">My Items</string>
+    <string name="log_out">Log Out</string>
 
 </resources>

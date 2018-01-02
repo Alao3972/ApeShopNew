@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "859523740293",
+    "firebase_url": "https://ape-shop.firebaseio.com",
+    "project_id": "ape-shop",
+    "storage_bucket": "ape-shop.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:859523740293:android:838d769a7019120d",
+        "android_client_info": {
+          "package_name": "com.example.andylao.apeshop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "859523740293-pup5jfqsmtflacdi9a0q1310g7cgqg69.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDWtq8Uon_RN2VhqmyjXPDiIZrRcisKGUE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

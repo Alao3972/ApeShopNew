@@ -39,8 +39,10 @@ public class EditItem extends AppCompatActivity
     int price;
 
     Button updateBtn;
+    Button deleteBtn;
 
     boolean updateCheck;
+    boolean deleteCheck;
 
     Spinner categorySpinner;
     Spinner countrySpinner;
@@ -138,9 +140,28 @@ public class EditItem extends AppCompatActivity
 
         populateItem();
         updateClick();
+        deleteClick();
 
 
+    }
 
+    private void deleteClick() {
+        deleteBtn = (Button) findViewById(R.id.delete_btn);
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteCheck = false;
+                String deleteId = Integer.toString(itemId);
+                deleteCheck = dbHelper.deleteItem(deleteId);
+                if (deleteCheck){
+                    Intent intent= new Intent(getBaseContext(),MyItem.class);
+                    Toast.makeText(getBaseContext(),  "Delete Success" , Toast.LENGTH_LONG).show();
+                    startActivity(intent);
+
+                }
+
+            }
+        });
     }
 
     private void updateClick() {
@@ -300,6 +321,11 @@ public class EditItem extends AppCompatActivity
             case R.id.nav_my_items:
                 Intent t= new Intent(this,MyItem.class);
                 startActivity(t);
+                break;
+            case R.id.nav_log_out:
+                Intent l= new Intent(this,MainActivity.class);
+                stopService(new Intent(getBaseContext(), BackgroundService.class));
+                startActivity(l);
                 break;
         }
 

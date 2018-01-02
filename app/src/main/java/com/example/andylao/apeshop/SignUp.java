@@ -99,16 +99,16 @@ public class SignUp extends AppCompatActivity
         });
 
         // getting input values
-        firstName = (EditText)findViewById(R.id.sign_up_first_name_txt);
-        lastName = (EditText)findViewById(R.id.sign_up_last_name_txt);
-        email = (EditText)findViewById(R.id.sign_up_email_txt);
-        password = (EditText)findViewById(R.id.sign_up_password_txt);
-        address = (EditText)findViewById(R.id.sign_up_address_txt);
-        postalCode = (EditText)findViewById(R.id.sign_up_code_txt);
+        firstName = findViewById(R.id.sign_up_first_name_txt);
+        lastName = findViewById(R.id.sign_up_last_name_txt);
+        email = findViewById(R.id.sign_up_email_txt);
+        password = findViewById(R.id.sign_up_password_txt);
+        address = findViewById(R.id.sign_up_address_txt);
+        postalCode = findViewById(R.id.sign_up_code_txt);
 
         //when sign up clicked
         //validate inputs
-        signUpButton = (Button)findViewById(R.id.sign_up_btn);
+        signUpButton = findViewById(R.id.sign_up_btn);
         signUpButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
@@ -232,6 +232,11 @@ public class SignUp extends AppCompatActivity
             case R.id.nav_my_items:
                 Intent t= new Intent(this,MyItem.class);
                 startActivity(t);
+                break;
+            case R.id.nav_log_out:
+                Intent l= new Intent(this,MainActivity.class);
+                stopService(new Intent(getBaseContext(), BackgroundService.class));
+                startActivity(l);
                 break;
         }
 

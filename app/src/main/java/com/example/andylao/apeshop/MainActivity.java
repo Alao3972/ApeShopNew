@@ -2,8 +2,8 @@ package com.example.andylao.apeshop;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.annotation.NonNull;
+import android.view.KeyEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,19 +13,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     DrawerLayout drawer;
     NavigationView navigationView;
-    Toolbar toolbar = null;
-    int userId;
-    TextView navName;
+    Button categoryBtn;
+
+    EditText searchBar;
+    String searchInput;
 
     User user;
 
@@ -33,41 +32,58 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         user = new User();
 
-        userLogin();
+        categoryBtn = findViewById(R.id.home_browse_btn);
+        categoryBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent= new Intent(getBaseContext(),SearchAd.class);
+                intent.putExtra("searchInput", " ");
+                startActivity(intent);
+
+            }
+        });
+
+        searchBar = findViewById(R.id.home_search_txt);
+        searchBar.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+
+                if (keyEvent.getAction() == KeyEvent.ACTION_DOWN){
+                    switch (i){
+                        case KeyEvent.KEYCODE_ENTER:
+                            Intent intent= new Intent(getBaseContext(),SearchAd.class);
+                            searchInput = searchBar.getText().toString();
+                            intent.putExtra("searchInput", searchInput);
+                            startActivity(intent);
+
+                    }
+                }
 
 
+                return false;
 
-
-
-    }
-    //get user id from login to show user is logged in
-    public void userLogin(){
-        Intent intent = getIntent();
-        userId = intent.getIntExtra("userId", 0);
-        //email = intent.getStringExtra("email");
-        if (userId != 0){
-
-            Toast.makeText(getBaseContext(), userId , Toast.LENGTH_LONG).show();
-        }
+            }
+        });
 
     }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -99,7 +115,7 @@ public class MainActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id=item.getItemId();
         switch (id){
@@ -125,18 +141,24 @@ public class MainActivity extends AppCompatActivity
                 Intent t= new Intent(this,MyItem.class);
                 startActivity(t);
                 break;
+            case R.id.nav_log_out:
+                Intent l= new Intent(this,MainActivity.class);
+                stopService(new Intent(getBaseContext(), BackgroundService.class));
+                startActivity(l);
+                break;
+
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
     /**
      * Post Ad page
-     * @param view
      */
     public void postAd(View view){
         Intent intent = new Intent(this, PostAd.class);
         startActivity(intent);
     }
+
 }

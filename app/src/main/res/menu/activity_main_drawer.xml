@@ -5,38 +5,29 @@
 
     <group android:checkableBehavior="single"/>
         <item
-        android:id="@+id/nav_home"
-        android:icon="@mipmap/ic_home_black_24dp"
-        android:title="Home" />
+            android:id="@+id/nav_home"
+            android:icon="@mipmap/ic_home_black_24dp"
+            android:title="@string/home" />
         <item
             android:id="@+id/nav_sign_up"
             android:icon="@mipmap/ic_person_add_black_24dp"
-            android:title="Sign Up" />
+            android:title="@string/sign_up" />
         <item
             android:id="@+id/nav_log_in"
-            android:icon="@mipmap/ic_input_black_24dp"
-            android:title="Log In" />
+            android:icon="@mipmap/ic_open_in_browser_black_24dp"
+            android:title="@string/log_in" />
         <item
             android:id="@+id/nav_post_ad"
             android:icon="@drawable/ic_menu_camera"
-            android:title="Post Ad" />
+            android:title="@string/post_ad" />
         <item
             android:id="@+id/nav_my_items"
             android:icon="@drawable/ic_menu_manage"
-            android:title="My Items" />
-    <!--</group>-->
+            android:title="@string/my_items" />
+        <item
+            android:id="@+id/nav_log_out"
+            android:icon="@mipmap/ic_input_black_24dp"
+            android:title="@string/log_out" />
 
-    <!--<item android:title="Communicate">-->
-        <!--<menu>-->
-            <!--<item-->
-                <!--android:id="@+id/nav_share"-->
-                <!--android:icon="@drawable/ic_menu_share"-->
-                <!--android:title="Share" />-->
-            <!--<item-->
-                <!--android:id="@+id/nav_send"-->
-                <!--android:icon="@drawable/ic_menu_send"-->
-                <!--android:title="Send" />-->
-        <!--</menu>-->
-    <!--</item>-->
 
 </menu>

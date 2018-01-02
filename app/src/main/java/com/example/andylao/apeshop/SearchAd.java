@@ -1,16 +1,11 @@
 package com.example.andylao.apeshop;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -24,69 +19,104 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
-
-public class MyItem extends AppCompatActivity
+public class SearchAd extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    //private static final String TAG = "ListDataActivity";
-
-    DatabaseHelper dbHelper;
-
-    int userId;
-    int itemId;
-    ListView listContent;
+    Spinner categorySpinner;
+    ArrayAdapter<CharSequence> adapter;
+    ListView listItem;
     public Cursor itemCursor;
     public Cursor singleItemCursor;
     public ArrayList<String> itemList;
     public ArrayList<String> itemIdList;
-    public ArrayList<String> singleItem;
     String title, description, category, email, address, postalCode, country, province;
     int price;
+    int itemId;
+    String searchInput;
+    ListAdapter listAdapter;
+
+    DatabaseHelper dbHelper;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_item);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        setContentView(R.layout.activity_search_ad);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        dbHelper = new DatabaseHelper(this);
-
-        userLogin();
-
-        listContent = findViewById(R.id.myItemsListView);
-        listContent.setBackgroundColor(Color.WHITE);
-
-        itemList = new ArrayList<>();
-        itemIdList = new ArrayList<>();
-        singleItem = new ArrayList<>();
-        itemCursor = dbHelper.getItemList(userId);
-
-        populateMyItems();
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        dbHelper = new DatabaseHelper(this);
+
+        Intent intent = getIntent();
+        searchInput = intent.getExtras().getString("searchInput", " ");
+
+        categorySpinner = (Spinner) findViewById(R.id.search_category_spinner);
+        adapter = ArrayAdapter.createFromResource(this, R.array.categoriesArray, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        categorySpinner.setAdapter(adapter);
+        categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String category = categorySpinner.getSelectedItem().toString();
+                if (!category.equals("Select")){
+                    itemList.clear();
+                    adapter.notifyDataSetChanged();
+                    itemCursor = dbHelper.browseItem(category);
+                    populateItemList();
+                }
+
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+        itemList = new ArrayList<>();
+        itemIdList = new ArrayList<>();
+        listItem = findViewById(R.id.searchListView);
+        listItem.setBackgroundColor(Color.WHITE);
+
+        if (searchInput.equals(" ")){
+            Toast.makeText(getBaseContext(),"Nothing" , Toast.LENGTH_LONG).show();
+            itemCursor = dbHelper.getItem();
+            populateItemList();
+        }
+        else{
+            itemCursor = dbHelper.searchItemList(searchInput);
+            Toast.makeText(getBaseContext(),"Something" + searchInput, Toast.LENGTH_LONG).show();
+            populateItemList();
+        }
+
 
     }
 
-    private void populateMyItems() {
+    private void populateItemList() {
 
         if (itemCursor.getCount() == 0){
-            Toast.makeText(getBaseContext(), "No Ads Posted" , Toast.LENGTH_LONG).show();
+            Toast.makeText(getBaseContext(), "No Ads Posted" + itemCursor.getCount() , Toast.LENGTH_LONG).show();
+            listItem.setAdapter(null);
+            adapter.notifyDataSetChanged();
         }
-        else{
+        if(itemCursor.getCount() != 0){
+            Toast.makeText(getBaseContext(),"Wow" , Toast.LENGTH_LONG).show();
             while(itemCursor.moveToNext()){
                 itemList.add(itemCursor.getString(2));
                 itemIdList.add(itemCursor.getString(0));
@@ -100,21 +130,18 @@ public class MyItem extends AppCompatActivity
                 country = itemCursor.getString(9);
                 province = itemCursor.getString(10);
 
-                ListAdapter listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, itemList);
-                listContent.setAdapter(listAdapter);
+                listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, itemList);
+                listItem.setAdapter(listAdapter);
 
+                listItem.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-            }
-            listContent.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Intent intent = new Intent(getBaseContext(), ViewItem.class);
+                        itemId = Integer.parseInt(itemIdList.get(position));
 
-                    String newTitle;
-
-                    Intent intent = new Intent(MyItem.this, EditItem.class);
-                    itemId = Integer.parseInt(itemIdList.get(position));
-
-                    singleItemCursor = dbHelper.getSingleItem(itemId);
+                        singleItemCursor = dbHelper.getSingleItem(itemId);
+                        Toast.makeText(getBaseContext(), title, Toast.LENGTH_LONG).show();
 
                         while(singleItemCursor.moveToNext()){
                             //itemList.add(itemCursor.getString(2));
@@ -130,44 +157,29 @@ public class MyItem extends AppCompatActivity
                             province = singleItemCursor.getString(10);
                         }
 
-                    Toast.makeText(getBaseContext(), title+ itemId, Toast.LENGTH_LONG).show();
-                    intent.putExtra("itemId", itemId);
-                    intent.putExtra("title", title);
-                    intent.putExtra("description", description);
-                    intent.putExtra("category", category);
-                    intent.putExtra("price", price);
-                    intent.putExtra("email", email);
-                    intent.putExtra("address", address);
-                    intent.putExtra("postalCode", postalCode);
-                    intent.putExtra("country", country);
-                    intent.putExtra("province", province);
+                        //intent.putExtra("itemId", itemId);
+                        intent.putExtra("title", title);
+                        intent.putExtra("description", description);
+                        intent.putExtra("category", category);
+                        intent.putExtra("price", price);
+                        intent.putExtra("email", email);
+                        intent.putExtra("address", address);
+                        intent.putExtra("postalCode", postalCode);
+                        intent.putExtra("country", country);
+                        intent.putExtra("province", province);
 
-                    startActivity(intent);
+                        startActivity(intent);
 
-                }
-            });
+                    }
+                });
 
-
-
+            }
         }
     }
-
-    public void userLogin(){
-
-        SharedPreferences preferences = getSharedPreferences("loginInfo", Context.MODE_PRIVATE);
-        userId = preferences.getInt("userId", 0);
-        if (userId == 0){
-            //get user id from shared preferences to see if user is logged in
-            Intent toLogin= new Intent(this,LogIn.class);
-            startActivity(toLogin);
-            Toast.makeText(getBaseContext(), "Need to login to View Items", Toast.LENGTH_LONG).show();
-        }
-    }
-
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -233,7 +245,7 @@ public class MyItem extends AppCompatActivity
                 break;
         }
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
