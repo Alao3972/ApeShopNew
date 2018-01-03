@@ -1,9 +1,18 @@
 package com.example.andylao.apeshop;
 
+import android.*;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,8 +26,20 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class EditItem extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -32,11 +53,13 @@ public class EditItem extends AppCompatActivity
 
     boolean spinnerList;
 
-    int userId;
     int itemId;
 
     String title, description, category, email, address, postalCode, country, province;
     int price;
+
+    byte[] selectedImage;
+    byte[] newImage;
 
     Button updateBtn;
     Button deleteBtn;
@@ -53,16 +76,27 @@ public class EditItem extends AppCompatActivity
     ArrayAdapter<CharSequence> adapter;
 
     DatabaseHelper dbHelper;
-    private Item item;
+    Button editImageBtn;
+    ImageView editImageView;
+    Bitmap currentImage;
+    public Cursor imageCursor;
+    Bitmap bitmap;
+    File destination = null;
+    InputStream inputStreamImg;
+    String imgPath = null;
+    int PICK_IMAGE_CAMERA = 1, PICK_IMAGE_GALLERY = 2;
+
+    byte[] image;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_item);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -72,8 +106,19 @@ public class EditItem extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         dbHelper = new DatabaseHelper(this);
-        item = new Item();//Category Spinner
-        categorySpinner = (Spinner) findViewById(R.id.edit_category_spinner);
+
+        editImageView = findViewById(R.id.edit_image_view);
+        editImageBtn = findViewById(R.id.edit_image_btn);
+        editImageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                imageChooser();
+
+            }
+        });
+
+        //Category Spinner
+        categorySpinner = findViewById(R.id.edit_category_spinner);
         adapter = ArrayAdapter.createFromResource(this, R.array.categoriesArray, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(adapter);
@@ -90,7 +135,7 @@ public class EditItem extends AppCompatActivity
         });
 
         //country Spinner
-        countrySpinner = (Spinner) findViewById(R.id.edit_country_spinner);
+        countrySpinner = findViewById(R.id.edit_country_spinner);
         adapter = ArrayAdapter.createFromResource(this, R.array.countryArray, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         countrySpinner.setAdapter(adapter);
@@ -107,7 +152,7 @@ public class EditItem extends AppCompatActivity
         });
 
         //Category Spinner
-        categorySpinner = (Spinner) findViewById(R.id.edit_category_spinner);
+        categorySpinner = findViewById(R.id.edit_category_spinner);
         adapter = ArrayAdapter.createFromResource(this, R.array.categoriesArray, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(adapter);
@@ -165,7 +210,7 @@ public class EditItem extends AppCompatActivity
     }
 
     private void updateClick() {
-        updateBtn = (Button) findViewById(R.id.edit_btn);
+        updateBtn = findViewById(R.id.edit_btn);
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -180,16 +225,17 @@ public class EditItem extends AppCompatActivity
                 String newPostalCode = editPostalCode.getText().toString();
                 String newCountry = countrySpinner.getSelectedItem().toString();
                 String newProvince = provinceSpinner.getSelectedItem().toString();
+                newImage = convertImage(bitmap);
 
                 updateCheck = false;
 
                 String updateId = Integer.toString(itemId);
 
-                updateCheck = dbHelper.updateItem(updateId, newTitle, newDescription, newCategory, newPrice, newEmail, newAddress, newPostalCode, newCountry, newProvince );
+                updateCheck = dbHelper.updateItem(updateId, newTitle, newDescription, newCategory, newPrice, newEmail, newAddress, newPostalCode, newCountry, newProvince , newImage);
 
                 if (updateCheck){
                     Intent intent= new Intent(getBaseContext(),MyItem.class);
-                    Toast.makeText(getBaseContext(),  "Update Success" + updateId, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(),  "Update Success", Toast.LENGTH_LONG).show();
                     startActivity(intent);
                 }
 
@@ -210,12 +256,22 @@ public class EditItem extends AppCompatActivity
         country = itemIntent.getExtras().getString("country", " ");
         province = itemIntent.getExtras().getString("province", " ");
 
-        editTitle = (EditText) findViewById(R.id.edit_title_txt);
-        editDescription = (EditText) findViewById(R.id.edit_description_txt);
-        editPrice = (EditText) findViewById(R.id.edit_price);
-        editEmail = (EditText) findViewById(R.id.edit_email_txt);
-        editAddress = (EditText) findViewById(R.id.edit_address_txt);
-        editPostalCode = (EditText) findViewById(R.id.edit_postalCode_txt);
+        imageCursor = dbHelper.getSingleItem(itemId);
+
+        while(imageCursor.moveToNext()){
+
+            selectedImage = imageCursor.getBlob(11);
+        }
+        currentImage = convertByteToBitmap(selectedImage);
+
+        editImageView.setImageBitmap(currentImage);
+
+        editTitle = findViewById(R.id.edit_title_txt);
+        editDescription = findViewById(R.id.edit_description_txt);
+        editPrice = findViewById(R.id.edit_price);
+        editEmail = findViewById(R.id.edit_email_txt);
+        editAddress = findViewById(R.id.edit_address_txt);
+        editPostalCode = findViewById(R.id.edit_postalCode_txt);
 
         editTitle.setText(title);
         editDescription.setText(description);
@@ -336,10 +392,119 @@ public class EditItem extends AppCompatActivity
 
     /**
      * Back Button to home page
-     * @param view
      */
     public void showItems(View view){
         Intent intent = new Intent(this, MyItem.class);
         startActivity(intent);
     }
+
+    public Bitmap convertByteToBitmap(byte[] byteArray)
+    {
+        ByteArrayInputStream arrayInputStream = new ByteArrayInputStream(byteArray);
+        Bitmap bitmap = BitmapFactory.decodeStream(arrayInputStream);
+        return bitmap;
+    }
+    private byte[] convertImage(Bitmap b){
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        b.compress(Bitmap.CompressFormat.PNG, 0, stream);
+        return stream.toByteArray();
+
+    }
+    public void imageChooser(){
+
+        ActivityCompat.requestPermissions(this, new String[] {android.Manifest.permission.CAMERA}, 100);
+        try {
+            PackageManager pm = getPackageManager();
+            int hasPerm = pm.checkPermission(android.Manifest.permission.CAMERA, getPackageName());
+            if (hasPerm == PackageManager.PERMISSION_GRANTED) {
+                final CharSequence[] options = {"Take Photo", "Choose From Gallery","Cancel"};
+                //this
+                android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
+                builder.setTitle("Select Option");
+                builder.setItems(options, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int item) {
+                        if (options[item].equals("Take Photo")) {
+                            dialog.dismiss();
+                            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            startActivityForResult(intent, PICK_IMAGE_CAMERA);
+                        } else if (options[item].equals("Choose From Gallery")) {
+                            dialog.dismiss();
+                            Intent pickPhoto = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                            startActivityForResult(pickPhoto, PICK_IMAGE_GALLERY);
+                        } else if (options[item].equals("Cancel")) {
+                            dialog.dismiss();
+                        }
+                    }
+                });
+                builder.show();
+            } else
+                Toast.makeText(this, "Camera Permission error1", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(this, "Camera Permission error2", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        inputStreamImg = null;
+        if (requestCode == PICK_IMAGE_CAMERA) {
+            try {
+                Uri selectedImage = data.getData();
+                bitmap = (Bitmap) data.getExtras().get("data");
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 50, bytes);
+
+                Log.e("Activity", "Pick from Camera::>>> ");
+
+                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+                destination = new File(Environment.getExternalStorageDirectory() + "/" +
+                        getString(R.string.app_name), "IMG_" + timeStamp + ".jpg");
+                FileOutputStream fo;
+                try {
+                    destination.createNewFile();
+                    fo = new FileOutputStream(destination);
+                    fo.write(bytes.toByteArray());
+                    fo.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                imgPath = destination.getAbsolutePath();
+                editImageView.setImageBitmap(bitmap);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (requestCode == PICK_IMAGE_GALLERY) {
+            Uri selectedImage = data.getData();
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                Log.e("Activity", "Pick from Gallery::>>> ");
+
+                imgPath = getRealPathFromURI(selectedImage);
+                destination = new File(imgPath.toString());
+                editImageView.setImageBitmap(bitmap);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    public String getRealPathFromURI(Uri contentUri) {
+        String[] proj = {MediaStore.Audio.Media.DATA};
+        Cursor cursor = managedQuery(contentUri, proj, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
+    }
+
+
+
 }

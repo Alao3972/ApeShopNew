@@ -254,19 +254,3 @@ public class SignUp extends AppCompatActivity
         startActivity(intent);
     }
 }
-// hide log in and sign up options after login sucessful
-
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
-//        hideItem();
-//    }
-//
-//
-//    private void hideItem()
-//    {
-//        navigationView = (NavigationView) findViewById(R.id.nav_view);
-//        Menu nav_Menu = navigationView.getMenu();
-//        nav_Menu.findItem(R.id.nav_settings).setVisible(false);
-//    }

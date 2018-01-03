@@ -32,7 +32,7 @@ public class SearchAd extends AppCompatActivity
     ListView listItem;
     public Cursor itemCursor;
     public Cursor singleItemCursor;
-    public ArrayList<String> itemList;
+    public String[] itemList;
     public ArrayList<String> itemIdList;
     String title, description, category, email, address, postalCode, country, province;
     int price;
@@ -42,6 +42,8 @@ public class SearchAd extends AppCompatActivity
 
     DatabaseHelper dbHelper;
 
+    byte[] selectedByte;
+    byte[][] imageArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,107 +75,91 @@ public class SearchAd extends AppCompatActivity
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String category = categorySpinner.getSelectedItem().toString();
                 if (!category.equals("Select")){
-                    itemList.clear();
-                    adapter.notifyDataSetChanged();
                     itemCursor = dbHelper.browseItem(category);
                     populateItemList();
                 }
-
-
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
 
-
-        itemList = new ArrayList<>();
         itemIdList = new ArrayList<>();
         listItem = findViewById(R.id.searchListView);
-        listItem.setBackgroundColor(Color.WHITE);
+        listItem.setBackgroundColor(Color.BLACK);
 
         if (searchInput.equals(" ")){
-            Toast.makeText(getBaseContext(),"Nothing" , Toast.LENGTH_LONG).show();
             itemCursor = dbHelper.getItem();
             populateItemList();
         }
         else{
             itemCursor = dbHelper.searchItemList(searchInput);
-            Toast.makeText(getBaseContext(),"Something" + searchInput, Toast.LENGTH_LONG).show();
             populateItemList();
         }
-
-
     }
-
     private void populateItemList() {
+        int count = itemCursor.getCount();
+        int counter;
+        counter = 0;
 
-        if (itemCursor.getCount() == 0){
-            Toast.makeText(getBaseContext(), "No Ads Posted" + itemCursor.getCount() , Toast.LENGTH_LONG).show();
+        itemList = new String[count];
+        imageArray = new byte[count][];
+
+        if (count == 0){
+            Toast.makeText(getBaseContext(), "No Ads Posted" , Toast.LENGTH_LONG).show();
             listItem.setAdapter(null);
             adapter.notifyDataSetChanged();
+            Toast.makeText(this, "HI", Toast.LENGTH_LONG).show();
         }
-        if(itemCursor.getCount() != 0){
-            Toast.makeText(getBaseContext(),"Wow" , Toast.LENGTH_LONG).show();
+        if(count != 0){
+            Toast.makeText(this, "Bye", Toast.LENGTH_LONG).show();
             while(itemCursor.moveToNext()){
-                itemList.add(itemCursor.getString(2));
+                itemList[counter] = itemCursor.getString(2);
+                imageArray[counter] =  itemCursor.getBlob(11);
                 itemIdList.add(itemCursor.getString(0));
-                title = itemCursor.getString(2);
-                description = itemCursor.getString(3);
-                category = itemCursor.getString(4);
-                price = Integer.parseInt(itemCursor.getString(5));
-                email = itemCursor.getString(6);
-                address = itemCursor.getString(7);
-                postalCode = itemCursor.getString(8);
-                country = itemCursor.getString(9);
-                province = itemCursor.getString(10);
 
-                listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, itemList);
-                listItem.setAdapter(listAdapter);
-
-                listItem.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                        Intent intent = new Intent(getBaseContext(), ViewItem.class);
-                        itemId = Integer.parseInt(itemIdList.get(position));
-
-                        singleItemCursor = dbHelper.getSingleItem(itemId);
-                        Toast.makeText(getBaseContext(), title, Toast.LENGTH_LONG).show();
-
-                        while(singleItemCursor.moveToNext()){
-                            //itemList.add(itemCursor.getString(2));
-                            //itemIdList.add(itemCursor.getString(0));
-                            title = singleItemCursor.getString(2);
-                            description = singleItemCursor.getString(3);
-                            category = singleItemCursor.getString(4);
-                            price = Integer.parseInt(singleItemCursor.getString(5));
-                            email = singleItemCursor.getString(6);
-                            address = singleItemCursor.getString(7);
-                            postalCode = singleItemCursor.getString(8);
-                            country = singleItemCursor.getString(9);
-                            province = singleItemCursor.getString(10);
-                        }
-
-                        //intent.putExtra("itemId", itemId);
-                        intent.putExtra("title", title);
-                        intent.putExtra("description", description);
-                        intent.putExtra("category", category);
-                        intent.putExtra("price", price);
-                        intent.putExtra("email", email);
-                        intent.putExtra("address", address);
-                        intent.putExtra("postalCode", postalCode);
-                        intent.putExtra("country", country);
-                        intent.putExtra("province", province);
-
-                        startActivity(intent);
-
-                    }
-                });
-
+                counter++;
             }
+            CustomListAdapter listAdapter = new CustomListAdapter(this, itemList, imageArray);
+            listItem.setAdapter(listAdapter);
+
+            listItem.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    Intent intent = new Intent(getBaseContext(), ViewItem.class);
+                    itemId = Integer.parseInt(itemIdList.get(position));
+
+                    singleItemCursor = dbHelper.getSingleItem(itemId);
+
+                    while(singleItemCursor.moveToNext()){
+                        title = singleItemCursor.getString(2);
+                        description = singleItemCursor.getString(3);
+                        category = singleItemCursor.getString(4);
+                        price = Integer.parseInt(singleItemCursor.getString(5));
+                        email = singleItemCursor.getString(6);
+                        address = singleItemCursor.getString(7);
+                        postalCode = singleItemCursor.getString(8);
+                        country = singleItemCursor.getString(9);
+                        province = singleItemCursor.getString(10);
+                    }
+
+                    intent.putExtra("itemId", itemId);
+                    intent.putExtra("title", title);
+                    intent.putExtra("description", description);
+                    intent.putExtra("category", category);
+                    intent.putExtra("price", price);
+                    intent.putExtra("email", email);
+                    intent.putExtra("address", address);
+                    intent.putExtra("postalCode", postalCode);
+                    intent.putExtra("country", country);
+                    intent.putExtra("province", province);
+
+                    startActivity(intent);
+
+                }
+            });
         }
     }
 

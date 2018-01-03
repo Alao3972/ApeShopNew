@@ -32,6 +32,10 @@
         android:layout_gravity="center"
         android:alpha="0.8">
 
+        <ImageView
+            android:id="@+id/view_image_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <LinearLayout
             android:layout_width="match_parent"

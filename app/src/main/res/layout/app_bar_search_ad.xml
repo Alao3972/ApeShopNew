@@ -49,15 +49,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/textColor"
-            android:textSize="20dp"
+            android:textSize="20sp"
 
-            android:text="Result:"/>
+            android:text="@string/result"/>
         <ListView
             android:id="@+id/searchListView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:alpha="0.8"/>
+            android:divider="@color/textColor"
+            android:dividerHeight="1dp"
+            android:alpha="0.9"/>
     </LinearLayout>
 
 

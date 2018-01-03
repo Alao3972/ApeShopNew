@@ -104,7 +104,7 @@ public class Item {
         return this.image;
     }
 
-    public void setImage(byte[] img){
-        this.image=img;
+    public void setImage(byte[] image){
+        this.image  = image;
     }
 }

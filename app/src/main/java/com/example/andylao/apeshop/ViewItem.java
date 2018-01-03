@@ -1,6 +1,9 @@
 package com.example.andylao.apeshop;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -16,8 +19,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.ByteArrayInputStream;
 
 public class ViewItem extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -26,16 +32,18 @@ public class ViewItem extends AppCompatActivity
     TextView txtDescription;
     TextView txtPrice;
     TextView txtEmail;
-    TextView txtAddress;
-    TextView txtPostalCode;
     TextView txtProvince;
     Button mapBtn;
     Button emailBtn;
+    public Cursor imageCursor;
+    DatabaseHelper dbHelper;
 
 
     String title, description, category, email, address, postalCode, country, province;
-    int price;
-
+    int price, itemId;
+    byte[] selectedImage;
+    Bitmap currentImage;
+    ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +64,10 @@ public class ViewItem extends AppCompatActivity
 
         mapBtn = (Button) findViewById(R.id.viewMapBtn);
         emailBtn = (Button) findViewById(R.id.viewContactBtn);
+
+        dbHelper = new DatabaseHelper(this);
+
+        imageView = findViewById(R.id.view_image_view);
 
         mapBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,13 +92,13 @@ public class ViewItem extends AppCompatActivity
             }
         });
 
-
     populateItem();
 
     }
     private void populateItem() {
         Intent itemIntent = getIntent();
-        //itemId = itemIntent.getIntExtra("itemId", 0);
+
+        itemId = itemIntent.getIntExtra("itemId", 0);
         title = itemIntent.getExtras().getString("title", " ");
         description = itemIntent.getExtras().getString("description", " ");
         category = itemIntent.getExtras().getString("category", " ");
@@ -97,14 +109,19 @@ public class ViewItem extends AppCompatActivity
         country = itemIntent.getExtras().getString("country", " ");
         province = itemIntent.getExtras().getString("province", " ");
 
+        imageCursor = dbHelper.getSingleItem(itemId);
+        while(imageCursor.moveToNext()){
+
+            selectedImage = imageCursor.getBlob(11);
+        }
+        currentImage = convertByteToBitmap(selectedImage);
+        imageView.setImageBitmap(currentImage);
+
         txtTitle = findViewById(R.id.titleView);
         txtDescription = findViewById(R.id.descriptionView);
         txtPrice = findViewById(R.id.priceView);
         txtEmail = findViewById(R.id.emailView);
-        //txtAddress = (EditText) findViewById(R.id.edit_address_txt);
-        //txtPostalCode = (TextView) findViewById(R.id.edit_postalCode_txt);
         txtProvince = findViewById(R.id.provinceView);
-
 
         txtTitle.setText(title);
         txtDescription.setText(description);
@@ -112,9 +129,12 @@ public class ViewItem extends AppCompatActivity
         txtEmail.setText(email);
         txtProvince.setText(province);
 
-        Toast.makeText(this, title+121, Toast.LENGTH_LONG).show();
-
-
+    }
+    public Bitmap convertByteToBitmap(byte[] byteArray)
+    {
+        ByteArrayInputStream arrayInputStream = new ByteArrayInputStream(byteArray);
+        Bitmap bitmap = BitmapFactory.decodeStream(arrayInputStream);
+        return bitmap;
     }
 
     @Override

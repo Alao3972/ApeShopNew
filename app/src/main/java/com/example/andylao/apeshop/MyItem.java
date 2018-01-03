@@ -1,16 +1,13 @@
 package com.example.andylao.apeshop;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -21,10 +18,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -42,12 +37,16 @@ public class MyItem extends AppCompatActivity
     ListView listContent;
     public Cursor itemCursor;
     public Cursor singleItemCursor;
-    public ArrayList<String> itemList;
+    public String[] itemList;
     public ArrayList<String> itemIdList;
     public ArrayList<String> singleItem;
     String title, description, category, email, address, postalCode, country, province;
     int price;
+    byte[] selectedByte;
+    byte[][] imageArray;
 
+    int count;
+    int counter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,12 +60,15 @@ public class MyItem extends AppCompatActivity
         userLogin();
 
         listContent = findViewById(R.id.myItemsListView);
-        listContent.setBackgroundColor(Color.WHITE);
+        listContent.setBackgroundColor(Color.BLACK);
 
-        itemList = new ArrayList<>();
         itemIdList = new ArrayList<>();
         singleItem = new ArrayList<>();
         itemCursor = dbHelper.getItemList(userId);
+        count = itemCursor.getCount();
+        itemList = new String[count];
+
+        imageArray = new byte[count][];
 
         populateMyItems();
 
@@ -83,33 +85,24 @@ public class MyItem extends AppCompatActivity
 
     private void populateMyItems() {
 
-        if (itemCursor.getCount() == 0){
+        if (count == 0){
             Toast.makeText(getBaseContext(), "No Ads Posted" , Toast.LENGTH_LONG).show();
         }
         else{
+            counter = 0;
             while(itemCursor.moveToNext()){
-                itemList.add(itemCursor.getString(2));
+                itemList[counter] = itemCursor.getString(2);
+                imageArray[counter] = itemCursor.getBlob(11);
                 itemIdList.add(itemCursor.getString(0));
-                title = itemCursor.getString(2);
-                description = itemCursor.getString(3);
-                category = itemCursor.getString(4);
-                price = Integer.parseInt(itemCursor.getString(5));
-                email = itemCursor.getString(6);
-                address = itemCursor.getString(7);
-                postalCode = itemCursor.getString(8);
-                country = itemCursor.getString(9);
-                province = itemCursor.getString(10);
 
-                ListAdapter listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, itemList);
-                listContent.setAdapter(listAdapter);
-
-
+                counter++;
             }
+            //ListAdapter listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, itemList);
+            CustomListAdapter listAdapter = new CustomListAdapter(this, itemList, imageArray);
+            listContent.setAdapter(listAdapter);
             listContent.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                    String newTitle;
 
                     Intent intent = new Intent(MyItem.this, EditItem.class);
                     itemId = Integer.parseInt(itemIdList.get(position));
@@ -117,8 +110,7 @@ public class MyItem extends AppCompatActivity
                     singleItemCursor = dbHelper.getSingleItem(itemId);
 
                         while(singleItemCursor.moveToNext()){
-                            //itemList.add(itemCursor.getString(2));
-                            //itemIdList.add(itemCursor.getString(0));
+
                             title = singleItemCursor.getString(2);
                             description = singleItemCursor.getString(3);
                             category = singleItemCursor.getString(4);
@@ -128,9 +120,10 @@ public class MyItem extends AppCompatActivity
                             postalCode = singleItemCursor.getString(8);
                             country = singleItemCursor.getString(9);
                             province = singleItemCursor.getString(10);
+                            selectedByte = singleItemCursor.getBlob(11);
+
                         }
 
-                    Toast.makeText(getBaseContext(), title+ itemId, Toast.LENGTH_LONG).show();
                     intent.putExtra("itemId", itemId);
                     intent.putExtra("title", title);
                     intent.putExtra("description", description);
@@ -141,13 +134,12 @@ public class MyItem extends AppCompatActivity
                     intent.putExtra("postalCode", postalCode);
                     intent.putExtra("country", country);
                     intent.putExtra("province", province);
+                    //intent.putExtra("image", selectedByte);
 
+                    Toast.makeText(getBaseContext(), selectedByte+"", Toast.LENGTH_LONG).show();
                     startActivity(intent);
-
                 }
             });
-
-
 
         }
     }
@@ -162,6 +154,11 @@ public class MyItem extends AppCompatActivity
             startActivity(toLogin);
             Toast.makeText(getBaseContext(), "Need to login to View Items", Toast.LENGTH_LONG).show();
         }
+    }
+
+    // convert from byte array to bitmap
+    public static Bitmap getImage(byte[] image) {
+        return BitmapFactory.decodeByteArray(image, 0, image.length);
     }
 
 

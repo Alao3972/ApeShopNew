@@ -61,20 +61,20 @@
         <item>Video Games</item>
         <item>Other</item>
     </string-array>
-    <string name="title_activity_log_in">LogIn</string>
+    <string name="title_activity_log_in">Log In</string>
     <string name="postal_zip_code">Postal / Zip Code</string>
-    <string name="title_activity_post_ad">PostAd</string>
+    <string name="title_activity_post_ad">Post Ad</string>
     <string name="title">Title</string>
     <string name="description">Description</string>
     <string name="category">Category</string>
     <string name="post_ad">Post AD</string>
     <string name="title_activity_my_item">My Items</string>
     <string name="guest">Guest</string>
-    <string name="title_activity_edit_item">EditItem</string>
+    <string name="title_activity_edit_item">Edit Item</string>
     <string name="update_ad">Update</string>
     <string name="delete_ad">Delete</string>
-    <string name="title_activity_search_ad">searchAd</string>
-    <string name="title_activity_view_item">ViewItem</string>
+    <string name="title_activity_search_ad">Search Ad</string>
+    <string name="title_activity_view_item">View Item</string>
     <string name="titleView">Title:</string>
     <string name="descriptionView">Description:</string>
     <string name="emailView">Email:</string>
@@ -84,5 +84,8 @@
     <string name="log_in">Log In</string>
     <string name="my_items">My Items</string>
     <string name="log_out">Log Out</string>
+    <string name="add_image">Add Image</string>
+    <string name="edit_image">Edit Image</string>
+    <string name="result">Result:</string>
 
 </resources>

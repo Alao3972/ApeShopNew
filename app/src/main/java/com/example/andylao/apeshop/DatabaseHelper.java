@@ -7,8 +7,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Blob;
 
 /*
  * Created by Andy Lao on 2017-11-11.
@@ -16,8 +15,8 @@ import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    public static final String
-            dbName = "apeshoperedsessft.db",
+    private static final String
+            dbName = "apeshoperft.db",
             tableName = "users",
             colId = "id",
             colFName = "firstName",
@@ -34,17 +33,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             colCategory = "category",
             colPrice = "price",
             itemTable = "items",
-            colPhone = "phone",
             employeeTable = "employee",
             colEmployeeId = "employeeId",
             colEmployeeFirstName = "employeeFirstName",
             colEmployeeLastName = "employeeLastName",
-            colImage = "itemImage";
+            colImage = "image";
 
 
-    public SQLiteDatabase db;
+    private SQLiteDatabase db;
 
-    public DatabaseHelper(Context context) {
+    DatabaseHelper(Context context) {
         super(context, dbName, null, 1);
     }
 
@@ -72,7 +70,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 colAddress + " TEXT," +
                 colPostalCode + " TEXT," +
                 colCountry + " TEXT," +
-                colProvince + " TEXT)");
+                colProvince + " TEXT," +
+                colImage + " BLOB)");
 
         db.execSQL("CREATE TABLE IF NOT EXISTS " + employeeTable + "(" +
                 colEmployeeId + " INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -83,6 +82,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS users");
+        db.execSQL("DROP TABLE IF EXISTS items");
         onCreate(db);
     }
 
@@ -148,6 +148,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(colPostalCode, item.getPostalCode());
         contentValues.put(colCountry, item.getCountry());
         contentValues.put(colProvince, item.getProvince());
+        contentValues.put(colImage, item.getImage());
 
 
         db.insert(itemTable, null, contentValues);
@@ -155,7 +156,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public boolean updateItem(String id,String title,String description,String category, int price, String email, String address, String postalCode, String country, String province) {
+    public boolean updateItem(String id, String title, String description, String category, int price, String email, String address, String postalCode, String country, String province, byte[] image) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
@@ -168,6 +169,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(colPostalCode, postalCode);
         contentValues.put(colCountry, country);
         contentValues.put(colProvince, province);
+        contentValues.put(colImage, image);
         db.update(itemTable, contentValues, "itemId = ?",new String[] { id });
         return true;
     }
@@ -183,8 +185,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT * FROM " + itemTable +
                 " WHERE " + colId + " = '" + userId + "'";
-        Cursor itemId = db.rawQuery(query,null);
-        return itemId;
+        return db.rawQuery(query,null);
     }
 
     public Cursor searchItemList(String searchWord){
@@ -192,8 +193,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT * FROM " + itemTable +
                 " WHERE " + colTitle + " LIKE ?";
-        Cursor itemId = db.rawQuery(query,  new String[]{"%" + searchWord + "%"});
-        return itemId;
+        return db.rawQuery(query,  new String[]{"%" + searchWord + "%"});
     }
 
     public Cursor getItem(){
@@ -207,8 +207,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT * FROM " + itemTable +
                 " WHERE " + colItemId + " = '" + itemId + "'";
-        Cursor singleItem = db.rawQuery(query,null);
-        return singleItem;
+        return db.rawQuery(query,null);
     }
 
     public Cursor browseItem(String category){
@@ -216,8 +215,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT * FROM " + itemTable +
                 " WHERE " + colCategory + " = '" + category + "'";
-        Cursor itemId = db.rawQuery(query,null);
-        return itemId;
+        return db.rawQuery(query,null);
     }
 
 
@@ -239,10 +237,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         int cursorCount = cursor.getCount();
         cursor.close();
         db.close();
-        if (cursorCount > 0) {
-            return true;
-        }
-        return false;
+        return cursorCount > 0;
     }
 
     public  DatabaseHelper open() throws SQLException

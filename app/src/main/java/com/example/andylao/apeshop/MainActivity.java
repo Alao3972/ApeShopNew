@@ -81,6 +81,10 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    public void showName(){
+
+    }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

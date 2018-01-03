@@ -8,7 +8,6 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
 
-
 /**
  * Created by Andy Lao on 2018-01-01.
  */
