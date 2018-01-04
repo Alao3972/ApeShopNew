@@ -134,9 +134,7 @@ public class MyItem extends AppCompatActivity
                     intent.putExtra("postalCode", postalCode);
                     intent.putExtra("country", country);
                     intent.putExtra("province", province);
-                    //intent.putExtra("image", selectedByte);
 
-                    Toast.makeText(getBaseContext(), selectedByte+"", Toast.LENGTH_LONG).show();
                     startActivity(intent);
                 }
             });

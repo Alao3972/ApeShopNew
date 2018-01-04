@@ -27,14 +27,13 @@
         android:layout_marginTop="55dp"
         android:layout_marginLeft="50dp"
         android:layout_marginRight="50dp"
+        android:alpha="0.8"
+        android:background="@color/colorPrimary"
         android:layout_gravity="center">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-
-            android:alpha="0.8"
-            android:background="@color/colorPrimary">
+            android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/edit_title_txt"
@@ -44,6 +43,7 @@
                 android:textColor="@color/textColor"
                 android:textColorHint="@color/textColor"
                 android:ems="10"
+                android:layout_weight="1"
                 android:hint="@string/title"
                 android:inputType="textPersonName" />
 
@@ -52,23 +52,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
+                android:layout_weight="1"
                 android:textColor="@color/textColor"
                 android:textColorHint="@color/textColor"
                 android:hint="@string/description"
                 android:inputType="textPersonName" />
-
-            <TextView
-                android:id="@+id/edit_category"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/textColor"
-                android:text="@string/category" />
-
-            <Spinner
-                android:id="@+id/edit_category_spinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/textColor"/>
 
             <EditText
                 android:id="@+id/edit_price"
@@ -78,7 +66,16 @@
                 android:textColorHint="@color/textColor"
                 android:ems="10"
                 android:hint="Price"
+                android:layout_weight="1"
                 android:inputType="number" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/edit_email_txt"
@@ -87,6 +84,7 @@
                 android:textColor="@color/textColor"
                 android:textColorHint="@color/textColor"
                 android:ems="10"
+                android:layout_weight="1"
                 android:hint="@string/email"
                 android:inputType="textEmailAddress" />
 
@@ -97,6 +95,7 @@
                 android:textColor="@color/textColor"
                 android:textColorHint="@color/textColor"
                 android:ems="10"
+                android:layout_weight="1"
                 android:hint="@string/address"
                 android:inputType="textPersonName" />
 
@@ -107,13 +106,30 @@
                 android:textColor="@color/textColor"
                 android:textColorHint="@color/textColor"
                 android:ems="10"
+                android:layout_weight="1"
                 android:hint="@string/postal_zip_code"
                 android:inputType="textPersonName" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/edit_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textColor"
+                    android:layout_weight="0.5"
+                    android:text="@string/category" />
 
                 <TextView
                     android:id="@+id/edit_country"
@@ -130,26 +146,32 @@
                     android:textColor="@color/textColor"
                     android:layout_weight="0.5"
                     android:text="@string/province_state" />
-
-
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Spinner
+                    android:id="@+id/edit_category_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/textColor"/>
 
                 <Spinner
                     android:id="@+id/edit_country_spinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
+                    android:layout_weight="1"
                     android:background="@color/textColor" />
 
                 <Spinner
                     android:id="@+id/edit_province_spinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
+                    android:layout_weight="1"
                     android:background="@color/textColor" />
 
             </LinearLayout>
@@ -170,7 +192,8 @@
             <ImageView
                 android:id="@+id/edit_image_view"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="70dp"
+                android:src="@mipmap/ic_launcher_round"
                 android:layout_weight="1"/>
 
         </LinearLayout>

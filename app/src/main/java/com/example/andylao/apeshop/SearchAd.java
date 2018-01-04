@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.view.KeyEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -27,6 +29,7 @@ import java.util.ArrayList;
 public class SearchAd extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    EditText searchBar;
     Spinner categorySpinner;
     ArrayAdapter<CharSequence> adapter;
     ListView listItem;
@@ -66,7 +69,8 @@ public class SearchAd extends AppCompatActivity
         Intent intent = getIntent();
         searchInput = intent.getExtras().getString("searchInput", " ");
 
-        categorySpinner = (Spinner) findViewById(R.id.search_category_spinner);
+
+        categorySpinner = findViewById(R.id.search_category_spinner);
         adapter = ArrayAdapter.createFromResource(this, R.array.categoriesArray, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(adapter);
@@ -85,7 +89,6 @@ public class SearchAd extends AppCompatActivity
             }
         });
 
-        itemIdList = new ArrayList<>();
         listItem = findViewById(R.id.searchListView);
         listItem.setBackgroundColor(Color.BLACK);
 
@@ -97,6 +100,24 @@ public class SearchAd extends AppCompatActivity
             itemCursor = dbHelper.searchItemList(searchInput);
             populateItemList();
         }
+        searchBar = findViewById(R.id.search_bar);
+        searchBar.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+
+                //When enter is pressed the search input will be passed to the next activity
+                if (keyEvent.getAction() == KeyEvent.ACTION_DOWN){
+                    switch (i){
+                        case KeyEvent.KEYCODE_ENTER:
+                            searchInput = searchBar.getText().toString();
+                            itemCursor = dbHelper.searchItemList(searchInput);
+                            searchBar.setText("");
+                            populateItemList();
+                    }
+                }
+                return false;
+            }
+        });
     }
     private void populateItemList() {
         int count = itemCursor.getCount();
@@ -105,15 +126,14 @@ public class SearchAd extends AppCompatActivity
 
         itemList = new String[count];
         imageArray = new byte[count][];
+        itemIdList = new ArrayList<>();
 
         if (count == 0){
             Toast.makeText(getBaseContext(), "No Ads Posted" , Toast.LENGTH_LONG).show();
             listItem.setAdapter(null);
             adapter.notifyDataSetChanged();
-            Toast.makeText(this, "HI", Toast.LENGTH_LONG).show();
         }
         if(count != 0){
-            Toast.makeText(this, "Bye", Toast.LENGTH_LONG).show();
             while(itemCursor.moveToNext()){
                 itemList[counter] = itemCursor.getString(2);
                 imageArray[counter] =  itemCursor.getBlob(11);
@@ -145,6 +165,7 @@ public class SearchAd extends AppCompatActivity
                         province = singleItemCursor.getString(10);
                     }
 
+                    intent.putExtra("searchInput", searchInput);
                     intent.putExtra("itemId", itemId);
                     intent.putExtra("title", title);
                     intent.putExtra("description", description);

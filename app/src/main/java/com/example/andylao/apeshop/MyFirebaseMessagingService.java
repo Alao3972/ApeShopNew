@@ -40,6 +40,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setContentTitle(title)
                 .setContentText(messageBody)
                 .setAutoCancel(true)
+                .setPriority(NotificationManager.IMPORTANCE_DEFAULT)
                 .setContentIntent(pendingIntent);
 
         NotificationManager notificationManager =

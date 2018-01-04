@@ -31,12 +31,20 @@
         android:background="@color/colorPrimary"
         android:alpha="0.8">
 
+        <EditText
+            android:id="@+id/search_bar"
+            android:singleLine="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/title_activity_search_ad"
+            android:textColorHint="@color/textColor"
+            android:textColor="@color/textColor"/>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/textColor"
             android:textSize="20dp"
-
             android:text="Select Category"/>
 
         <Spinner
@@ -59,7 +67,7 @@
             android:layout_gravity="center"
             android:divider="@color/textColor"
             android:dividerHeight="1dp"
-            android:alpha="0.9"/>
+            android:alpha="0.95"/>
     </LinearLayout>
 
 

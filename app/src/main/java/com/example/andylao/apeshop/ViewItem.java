@@ -35,15 +35,16 @@ public class ViewItem extends AppCompatActivity
     TextView txtProvince;
     Button mapBtn;
     Button emailBtn;
+    Button backBtn;
     public Cursor imageCursor;
     DatabaseHelper dbHelper;
-
 
     String title, description, category, email, address, postalCode, country, province;
     int price, itemId;
     byte[] selectedImage;
     Bitmap currentImage;
     ImageView imageView;
+    String searchInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +92,8 @@ public class ViewItem extends AppCompatActivity
                 startActivity(Intent.createChooser(emailIntent, title));
             }
         });
+        Intent intent = getIntent();
+        searchInput = intent.getExtras().getString("searchInput", " ");
 
     populateItem();
 
@@ -125,7 +128,7 @@ public class ViewItem extends AppCompatActivity
 
         txtTitle.setText(title);
         txtDescription.setText(description);
-        txtPrice.setText(""+price);
+        txtPrice.setText("$"+price);
         txtEmail.setText(email);
         txtProvince.setText(province);
 
@@ -180,7 +183,6 @@ public class ViewItem extends AppCompatActivity
             case R.id.nav_home:
                 Intent h= new Intent(this,MainActivity.class);
                 startActivity(h);
-
                 break;
             case R.id.nav_sign_up:
                 Intent i= new Intent(this,SignUp.class);
@@ -203,5 +205,13 @@ public class ViewItem extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    /**
+     * Back Button to Search page
+     */
+    public void searchItems(View view){
+        Intent intent = new Intent(this, SearchAd.class);
+        intent.putExtra("searchInput", searchInput);
+        startActivity(intent);
     }
 }

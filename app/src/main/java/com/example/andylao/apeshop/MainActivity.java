@@ -1,6 +1,9 @@
 package com.example.andylao.apeshop;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.KeyEvent;
@@ -15,6 +18,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
+
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -25,8 +34,10 @@ public class MainActivity extends AppCompatActivity
 
     EditText searchBar;
     String searchInput;
+    ImageView imageView;
 
     User user;
+    String URL = "https://image.flaticon.com/icons/png/512/194/194641.png";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +46,10 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //finds image view and execute the async task to download image
+        imageView = (ImageView) findViewById(R.id.main_image);
+        imageView.setTag(URL);
+        new DownloadImageTask().execute(imageView);
 
         drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -46,6 +61,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         user = new User();
 
+        // category btn click
         categoryBtn = findViewById(R.id.home_browse_btn);
         categoryBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,6 +78,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
 
+                //When enter is pressed the search input will be passed to the next activity
                 if (keyEvent.getAction() == KeyEvent.ACTION_DOWN){
                     switch (i){
                         case KeyEvent.KEYCODE_ENTER:
@@ -69,20 +86,11 @@ public class MainActivity extends AppCompatActivity
                             searchInput = searchBar.getText().toString();
                             intent.putExtra("searchInput", searchInput);
                             startActivity(intent);
-
                     }
                 }
-
-
                 return false;
-
             }
         });
-
-    }
-
-    public void showName(){
-
     }
 
     @Override
@@ -163,6 +171,37 @@ public class MainActivity extends AppCompatActivity
     public void postAd(View view){
         Intent intent = new Intent(this, PostAd.class);
         startActivity(intent);
+    }
+    // asynctask to download image
+    public class DownloadImageTask extends AsyncTask<ImageView, Void, Bitmap> {
+
+        ImageView imageView = null;
+
+        @Override
+        protected Bitmap doInBackground(ImageView... imageViews) {
+            this.imageView = imageViews[0];
+            return download_Image((String)imageView.getTag());
+        }
+        // set imageview to image
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            imageView.setImageBitmap(result);
+        }
+        // convert Url to bitmap
+        private Bitmap download_Image(String url) {
+
+            Bitmap bitmap =null;
+            try{
+                URL imgUrl = new URL(url);
+                HttpURLConnection con = (HttpURLConnection)imgUrl.openConnection();
+                InputStream inputStream = con.getInputStream();
+                bitmap = BitmapFactory.decodeStream(inputStream);
+                if (null != bitmap)
+                    return bitmap;
+
+            }catch(Exception e){}
+            return bitmap;
+        }
     }
 
 }

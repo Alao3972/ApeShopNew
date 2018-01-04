@@ -16,7 +16,7 @@ import java.sql.Blob;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String
-            dbName = "apeshoperft.db",
+            dbName = "apeshoperaukkkjt.db",
             tableName = "users",
             colId = "id",
             colFName = "firstName",
